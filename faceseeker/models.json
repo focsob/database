@@ -5,21 +5,60 @@
       "name": "buffalo_l",
       "rec": "w600k_r50",
       "version": "1",
-      "det": { "file": "det_10g.onnx", "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91", "size": 16923827 },
+      "det": {
+        "file": "det_10g.onnx",
+        "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+        "size": 16923827
+      },
       "recFile": "w600k_r50.onnx",
       "recSha": "4c06341c33c2ca1f86781dab0e829f88ad5b64be9fba56e56bc9ebdefc619e43",
       "recSize": 174383860,
-      "recParts": ["w600k_r50.onnx.part00", "w600k_r50.onnx.part01"]
+      "recParts": [
+        "w600k_r50.onnx.part00",
+        "w600k_r50.onnx.part01"
+      ]
     },
     "strongest": {
       "name": "antelopev2",
       "rec": "glintr100",
       "version": "1",
-      "det": { "file": "det_10g.onnx", "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91", "size": 16923827 },
+      "det": {
+        "file": "det_10g.onnx",
+        "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+        "size": 16923827
+      },
       "recFile": "glintr100.onnx",
       "recSha": "4ab1d6435d639628a6f3e5008dd4f929edf4c4124b1a7169e1048f9fef534cdf",
       "recSize": 260665334,
-      "recParts": ["glintr100.onnx.part00", "glintr100.onnx.part01", "glintr100.onnx.part02"]
+      "recParts": [
+        "glintr100.onnx.part00",
+        "glintr100.onnx.part01",
+        "glintr100.onnx.part02"
+      ]
+    },
+    "strongest_v2": {
+      "name": "AdaFace ViT-B KP-RPE WebFace12M",
+      "rec": "kprpe_vitb_wf12m",
+      "version": "1",
+      "det": {
+        "file": "det_10g.onnx",
+        "sha256": "5838f7fe053675b1c7a08b633df49e7af5495cee0493c7dcf6697200b85b5b91",
+        "size": 16923827
+      },
+      "recFile": "kprpe_vitb_wf12m.onnx",
+      "recSha": "f085abf7716bae58ae56298f1d43c58f07bb56b7e3a23010277508968914e549",
+      "recSize": 460831001,
+      "recParts": [
+        "kprpe_vitb_wf12m.onnx.part00",
+        "kprpe_vitb_wf12m.onnx.part01",
+        "kprpe_vitb_wf12m.onnx.part02",
+        "kprpe_vitb_wf12m.onnx.part03",
+        "kprpe_vitb_wf12m.onnx.part04"
+      ],
+      "inputs": [
+        "input",
+        "keypoints"
+      ]
     }
   }
 }
