@@ -113,18 +113,29 @@ for p in 80 "$PORT"; do
   fi
 done
 
+# accounts trading right now? (they restart by themselves and keep managing their positions)
+if [ -f "$DATA_DIR/accounts.json" ] && grep -q '"autoStart": true' "$DATA_DIR/accounts.json" 2>/dev/null; then
+  warn "有帳戶交易緊：安裝會重新啟動程式大約半分鐘，之後佢哋會自動繼續（交易所嘅止蝕止賺一直有效）"
+  if [ "$ASSUME_YES" -eq 0 ] && [ -r /dev/tty ]; then
+    printf '繼續？[y/N]: ' > /dev/tty
+    IFS= read -r go < /dev/tty || go=""
+    case "$go" in y|Y|yes|YES) ;; *) die "已取消" ;; esac
+  fi
+fi
+
 # ---------- packages ----------
 export DEBIAN_FRONTEND=noninteractive
 say "安裝系統套件（Java 21、Caddy）"
 if [ "${SKIP_APT:-0}" != "1" ]; then
   apt-get update -qq
   apt-get install -y -qq openjdk-21-jre-headless curl ca-certificates tar gnupg python3 debian-keyring debian-archive-keyring apt-transport-https >/dev/null
-  if ! command -v caddy >/dev/null 2>&1; then
+  # Caddy from its own repository: Ubuntu's older Caddy lacks the HTTP→HTTPS redirect on the panel port
+  if [ ! -f /etc/apt/sources.list.d/caddy-stable.list ]; then
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
     curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
     apt-get update -qq
-    apt-get install -y -qq caddy >/dev/null
   fi
+  apt-get install -y -qq caddy >/dev/null
 fi
 command -v java >/dev/null || die "安裝 Java 失敗"
 command -v caddy >/dev/null || die "安裝 Caddy 失敗"
@@ -137,7 +148,10 @@ install -d -m 0700 -o "$APP" -g "$APP" "$DATA_DIR"
 install -d -m 0755 "$CONF_DIR"
 
 # ---------- program files ----------
-SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" 2>/dev/null && pwd || echo /nonexistent)"
+SRC_DIR=/nonexistent
+if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
+  SRC_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
 if [ -d "$SRC_DIR/lib" ] && [ -f "$SRC_DIR/VERSION" ]; then
@@ -172,6 +186,9 @@ ln -sfn "releases/$VERSION" "$HOME_DIR/current.new"
 mv -Tf "$HOME_DIR/current.new" "$HOME_DIR/current"
 cp "$HOME_DIR/releases/$VERSION/install.sh" "$HOME_DIR/install.sh" 2>/dev/null || true
 chmod +x "$HOME_DIR/install.sh" 2>/dev/null || true
+# keep the three newest releases
+find "$HOME_DIR/releases" -mindepth 1 -maxdepth 1 -type d ! -name ".*" ! -name "$VERSION" -printf '%T@ %p\n' \
+  | sort -rn | tail -n +3 | cut -d' ' -f2- | while IFS= read -r old; do rm -rf "$old"; done
 chown -R "$APP:$APP" "$HOME_DIR"
 ok "程式版本 $VERSION 已放喺 $HOME_DIR"
 
