@@ -125,7 +125,7 @@ fi
 
 # ---------- packages ----------
 export DEBIAN_FRONTEND=noninteractive
-say "安裝系統套件（Java 21、Caddy）"
+say "安裝系統套件（Java 21、Caddy、chrony 時間同步）"
 if [ "${SKIP_APT:-0}" != "1" ]; then
   apt-get update -qq
   apt-get install -y -qq openjdk-21-jre-headless curl ca-certificates tar gnupg python3 debian-keyring debian-archive-keyring apt-transport-https >/dev/null
@@ -136,6 +136,12 @@ if [ "${SKIP_APT:-0}" != "1" ]; then
     apt-get update -qq
   fi
   apt-get install -y -qq caddy >/dev/null
+  # accurate clock: Bybit rejects signed requests that are off by more than a few seconds
+  if apt-get install -y -qq chrony >/dev/null 2>&1; then
+    systemctl enable --now chrony >/dev/null 2>&1 || true
+  else
+    warn "安裝 chrony 失敗，會用系統預設嘅時間同步"
+  fi
 fi
 command -v java >/dev/null || die "安裝 Java 失敗"
 command -v caddy >/dev/null || die "安裝 Caddy 失敗"
