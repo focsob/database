@@ -1,13 +1,13 @@
 {
-  "versionCode": 20301,
-  "versionName": "2.3.1",
-  "notes": "## 2.3.1（2026-10-20）\n\n- 修正 Gemini「測試」顯示「timeout」：新嘅 Gemini 同 ChatGPT 型號答之前會「諗」好耐，程式而家會叫佢哋少諗啲（如果型號唔支援會自動取消），等候時間亦由 45 秒加到 90 秒\n- 「測試」失敗時會講清楚原因：伺服器連唔到嗰個 AI、AI 回覆太慢、API Key 唔啱、型號名唔啱，或者用量到咗上限",
+  "versionCode": 20302,
+  "versionName": "2.3.2",
+  "notes": "## 2.3.2（2026-10-20）\n\n- 修正劃轉撳「全部」只轉到小數點後 2 位、原帳戶仲剩少少餘額：而家會向交易所查實際可以劃轉嘅金額，連小數點後所有位一齊轉（交易所接受到小數點後 8 位；如果唔接受咁多位，會自動逐步減少位數再試）\n- 劃轉視窗嘅結餘同日誌會顯示齊小數位；自己輸入嘅金額亦會照輸入嘅位數送出（之前最多 4 位）",
   "files": {
     "server": {
-      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.3.1.tar.gz",
-      "sha256": "e7cfe8b66a4d90c826b762cf8174370f0178c194ef583b95cf09b01f9912c3a0",
-      "size": 11641301,
-      "name": "bybitbot-server-2.3.1.tar.gz"
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.3.2.tar.gz",
+      "sha256": "53b58ea87c5376a855634aae7629e1691ef944f2baeab4214bbacab43d06102d",
+      "size": 11644516,
+      "name": "bybitbot-server-2.3.2.tar.gz"
     }
   }
 }
