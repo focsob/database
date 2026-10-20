@@ -1,25 +1,25 @@
 {
-  "versionCode": 20000,
-  "versionName": "2.0.0",
-  "notes": "## 2.0.0（2026-10-20）\n\n伺服器版做主力：新增 Ubuntu 伺服器 + 網頁控制台，可以同時管理多個 Bybit 帳戶；交易策略、風險控制同新聞全部重寫。\n\n**伺服器同網頁控制台（新）**\n- Ubuntu Server 24.04 一行指令安裝：`curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh | sudo bash`\n- 安裝時可以改網域同端口（預設 8443）；Caddy 自動申請同續期 Let's Encrypt 免費證書，強制 HTTPS（HTTP 自動轉 HTTPS、HSTS）\n- 登入：預設帳戶 Bosco／密碼 Bosco，第一次登入一定要改密碼（最少 10 個字元）；密碼用 Argon2id 儲存，API 金鑰用 AES-256-GCM 加密，金鑰檔只有服務帳戶讀到；登入連續錯 5 次之後會暫時鎖定，越錯鎖越耐（最長 1 小時）\n- 可以加多個 Bybit API，每個帳戶獨立設定、開始／停止、全部平倉、劃轉，可以設定為「交易達人（帶單）」帳戶\n- 總覽、帳戶、日誌、新聞、回測建議、系統（改密碼、新聞設定、更新）頁面；手機都用得\n- 冇帳戶交易緊嘅時候會自動檢查同安裝更新\n\n**交易**\n- 新策略（5 分鐘 K 線 + 1 小時突破）：順勢回調（VWAP／EMA 9/20/50/200 排列 + 15 分鐘 MACD）、保歷加收窄突破、開市區間突破（08:00 同美股開市）、流動性獵殺／破底翻、VWAP 兩倍標準差回歸、1 小時通道突破跟勢（交易所移動止蝕），配合相對成交量、持倉量（OI）、資金費率同交易時段過濾，重要經濟數據前後暫停\n- 出場：浮盈推保本、第一止賺平一半、EMA9 移動止蝕、最長持倉時間\n- 風險：每單風險 %（預設 5%，跟你文件）、每日虧損 10% 熔斷（全部平倉，停到香港時間翌日 08:00）、每日盈利 20% 目標（平倉鎖利，利潤劃轉去資金帳戶）、固定基準本金、每日最多開倉次數、主流幣同山寨幣分開槓桿上限\n- 支援 TradFi 永續（黃金、白銀、原油、美股、指數），可以設定優先 TradFi\n- 交易達人帳戶：只會交易允許帶單嘅合約；支援經典帳戶（非統一帳戶）\n- 同時顯示交易帳戶同資金帳戶結餘，可以喺程式入面雙向劃轉\n- 回測：24 個月數據、訓練期／測試期分開、計手續費、滑價同資金費率；設定畫面會顯示建議參數，可以一按套用（唔會改你嘅風險設定）。**現時冇一組參數喺測試期賺錢，詳情見 docs/backtest-report.md**\n\n**錯誤修正**\n- API 請求頻率：跟住 Bybit 回傳嘅剩餘次數自動放慢，遇到 10006 會等到重置時間再試，唔會再連續報錯\n- 新聞來源：DNS 失敗時用上次成功嘅結果或 DNS-over-HTTPS；讀取失敗嘅來源會逐步延遲重試（最長 30 分鐘）而唔會每分鐘報錯；修正美國聯儲局（404）、CryptoSlate（403）等來源\n- 數量／價格四捨五入誤差（例如 0.6 變成 0.599）\n\n**新聞**\n- 36 個來源 + 恐懼與貪婪指數 + 本週經濟日曆；新增外匯、黃金、指數同宏觀快訊（investingLive、FXStreet、Investing.com、華爾街見聞、歐洲央行等）俾 TradFi 用\n- 加密市場同宏觀分開計分；新聞頁顯示每個來源狀態\n\n**日誌（全部版本）**\n- 開倉黃色、盈利平倉綠色、虧損平倉紅色\n- 可以按類別（交易、訊號、新聞、帳戶、錯誤、系統）同文字篩選\n- 自動跳到最新，可以開關\n\n**Android 同 Windows**\n- 用新策略同設定（設定畫面由同一份設定清單產生，有回測建議）\n- 打開程式而未交易／停止交易後，會自動檢查同安裝更新；交易緊唔會更新\n- 所有成品（APK、Windows zip、伺服器套件）放喺 focsob/database\n\n**暫時唔做**\n- MT5 CFD 同 TradFi 跟單（Bybit 冇提供 MT5 交易 API）",
+  "versionCode": 20001,
+  "versionName": "2.0.1",
+  "notes": "## 2.0.1（2026-10-20）\n\n全面檢查程式碼後嘅修正。\n\n**交易**\n- 劃轉金額有時會少咗少少（例如輸入 10.1 變咗 10.0999），而家照輸入金額送出\n- 交易緊時喺程式入面劃轉，唔再當成盈虧：之前劃走資金可能誤觸每日虧損熔斷，劃入可能誤當達到每日目標\n- 太細嘅劃轉金額會講明原因，唔再顯示「唔支援劃轉」\n\n**新聞**\n- 新聞多過程式保留嘅數量時，被清走嘅舊新聞會俾當成新消息再出現（可能重複記錄，甚至用舊消息觸發交易），已修正\n- Android 同 Windows 新聞頁而家會顯示未來 24 小時重要經濟數據\n\n**伺服器同網頁**\n- 日誌頁喺多人同時寫入時可能漏咗幾行，已修正；轉換篩選時唔會再混入舊篩選嘅結果\n- 系統設定關閉新聞後，所有帳戶都唔會再讀新聞（之前個別帳戶仍然會自己讀）\n- 「全部平倉」唔會因為其他工作（例如讀取結餘）進行中而被拒絕\n- 同時大量登入嘗試唔會再令伺服器記憶體不足；被改動過嘅密碼檔會被拒絕\n- 自動更新下載期間如果有帳戶開始交易，會暫停更新，等全部停止先安裝\n- 停止中帳戶劃轉後會同時更新持倉\n\n**安裝程式**\n- 經 `curl | sudo bash` 執行時唔會誤用目前資料夾入面嘅檔案\n- 一律用 Caddy 官方套件（Ubuntu 內置嘅舊版 Caddy 唔支援 8443 端口 HTTP 轉 HTTPS）\n- 只保留最近三個版本\n- 有帳戶交易緊時重新安裝會先提示（重新啟動後會自動繼續）\n\n**Android**\n- 之後嘅自動更新喺 Android 12 或以上可以唔使再撳確認（第一次仍然要確認）",
   "files": {
     "apk": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.0/BybitBot-2.0.0.apk",
-      "sha256": "4072d6cb2c68ddcb6af8a4154b95b61f705f93098fc3080ed30127449fea3c14",
-      "size": 4166563,
-      "name": "BybitBot-2.0.0.apk"
+      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-2.0.1.apk",
+      "sha256": "a84e4f24a88ebab2956a54bdaf4ca9226545669bbe43d8d7573b442daffb2de6",
+      "size": 4168323,
+      "name": "BybitBot-2.0.1.apk"
     },
     "windows": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.0/BybitBot-windows-2.0.0.zip",
-      "sha256": "1be0c4d4114007c2c0f297247d21dd25d8cfe4ce0ac5c4461774560e639c9b01",
-      "size": 56799268,
-      "name": "BybitBot-windows-2.0.0.zip"
+      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-windows-2.0.1.zip",
+      "sha256": "e7a073bb49bd52acb732c1b390e630941ce005635dfef00520bab7716c8fbc9b",
+      "size": 56800257,
+      "name": "BybitBot-windows-2.0.1.zip"
     },
     "server": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.0/bybitbot-server-2.0.0.tar.gz",
-      "sha256": "ee712737ca1a7c380e03487f11eaf3d8b82f6536c0ff862af115fc9ca852b460",
-      "size": 11331627,
-      "name": "bybitbot-server-2.0.0.tar.gz"
+      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/bybitbot-server-2.0.1.tar.gz",
+      "sha256": "6af8fc7ef50f5437530675d763328248021566004e46509933140e6a88577fb4",
+      "size": 11334269,
+      "name": "bybitbot-server-2.0.1.tar.gz"
     }
   }
 }
