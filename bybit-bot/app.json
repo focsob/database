@@ -4,21 +4,21 @@
   "notes": "## 2.0.1（2026-10-20）\n\n全面檢查程式碼後嘅修正。\n\n**交易**\n- 劃轉金額有時會少咗少少（例如輸入 10.1 變咗 10.0999），而家照輸入金額送出\n- 交易緊時喺程式入面劃轉，唔再當成盈虧：之前劃走資金可能誤觸每日虧損熔斷，劃入可能誤當達到每日目標\n- 太細嘅劃轉金額會講明原因，唔再顯示「唔支援劃轉」\n\n**新聞**\n- 新聞多過程式保留嘅數量時，被清走嘅舊新聞會俾當成新消息再出現（可能重複記錄，甚至用舊消息觸發交易），已修正\n- Android 同 Windows 新聞頁而家會顯示未來 24 小時重要經濟數據\n\n**伺服器同網頁**\n- 日誌頁喺多人同時寫入時可能漏咗幾行，已修正；轉換篩選時唔會再混入舊篩選嘅結果\n- 系統設定關閉新聞後，所有帳戶都唔會再讀新聞（之前個別帳戶仍然會自己讀）\n- 「全部平倉」唔會因為其他工作（例如讀取結餘）進行中而被拒絕\n- 同時大量登入嘗試唔會再令伺服器記憶體不足；被改動過嘅密碼檔會被拒絕\n- 自動更新下載期間如果有帳戶開始交易，會暫停更新，等全部停止先安裝\n- 停止中帳戶劃轉後會同時更新持倉\n\n**安裝程式**\n- 經 `curl | sudo bash` 執行時唔會誤用目前資料夾入面嘅檔案\n- 一律用 Caddy 官方套件（Ubuntu 內置嘅舊版 Caddy 唔支援 8443 端口 HTTP 轉 HTTPS）\n- 只保留最近三個版本\n- 有帳戶交易緊時重新安裝會先提示（重新啟動後會自動繼續）\n\n**Android**\n- 之後嘅自動更新喺 Android 12 或以上可以唔使再撳確認（第一次仍然要確認）",
   "files": {
     "apk": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-2.0.1.apk",
-      "sha256": "91b813799861b2dbdccc04941302fe9c1e97c20a40e8d302e5671ed9b1ce0aaa",
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/BybitBot-2.0.1.apk",
+      "sha256": "0d6097843287bca90b77ee304bc7132277826515f85277155bc034bdae06a596",
       "size": 4168323,
       "name": "BybitBot-2.0.1.apk"
     },
     "windows": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-windows-2.0.1.zip",
-      "sha256": "842fc151bd72c178d179ecd598ba70d1d6f8404e42075bc41329e85843730488",
-      "size": 56800176,
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/BybitBot-windows-2.0.1.zip",
+      "sha256": "64eb64c19d4b32a2f535cfff882f97938255aa3941735144a1e9fde4501f34b1",
+      "size": 56800170,
       "name": "BybitBot-windows-2.0.1.zip"
     },
     "server": {
-      "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/bybitbot-server-2.0.1.tar.gz",
-      "sha256": "5b658af4bc80633225667323538e327f03e05c248efa147c9638d9d556257560",
-      "size": 11334268,
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.0.1.tar.gz",
+      "sha256": "7d91267149463b7010a9fc96655674b176a4c3661ba27dfa7babe9b7bd730c4b",
+      "size": 11334447,
       "name": "bybitbot-server-2.0.1.tar.gz"
     }
   }
