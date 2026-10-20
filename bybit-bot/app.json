@@ -1,13 +1,13 @@
 {
-  "versionCode": 20300,
-  "versionName": "2.3.0",
-  "notes": "## 2.3.0（2026-10-20）\n\n**新聞可以用多個人工智能（AI）一齊分析**\n- 除咗 Claude，而家仲可以用 ChatGPT（OpenAI）、Gemini（Google）、DeepSeek，同任何 OpenAI 相容接口（例如 OpenRouter、xAI Grok、本機 Ollama）\n- 開咗幾個 AI，每條新聞會同時問晒佢哋，再將方向同重要性取平均；意見唔一致時分數會自動減弱，令程式少啲因為單一 AI 判斷錯而落單\n- 某個 AI 失敗或者超時就用其他 AI 嘅結果；連續失敗 5 次會暫停佢；全部失敗先用內置規則分析\n- 「系統」頁新增「AI 新聞分析」：每個 AI 可以分別開關、輸入 API Key、改型號，有「測試」掣即時確認 Key 啱唔啱，並顯示上次成功時間同錯誤\n- 改 AI 設定即刻生效，交易緊嘅帳戶唔使停止再開始\n- 之前設定嘅 Claude API Key 會自動搬入新設定，唔使重新輸入",
+  "versionCode": 20301,
+  "versionName": "2.3.1",
+  "notes": "## 2.3.1（2026-10-20）\n\n- 修正 Gemini「測試」顯示「timeout」：新嘅 Gemini 同 ChatGPT 型號答之前會「諗」好耐，程式而家會叫佢哋少諗啲（如果型號唔支援會自動取消），等候時間亦由 45 秒加到 90 秒\n- 「測試」失敗時會講清楚原因：伺服器連唔到嗰個 AI、AI 回覆太慢、API Key 唔啱、型號名唔啱，或者用量到咗上限",
   "files": {
     "server": {
-      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.3.0.tar.gz",
-      "sha256": "4b46f01383ff1ffae72f759950fd70092fdbee6f71d0b1c2c94a05e591aa0f75",
-      "size": 11634772,
-      "name": "bybitbot-server-2.3.0.tar.gz"
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.3.1.tar.gz",
+      "sha256": "e7cfe8b66a4d90c826b762cf8174370f0178c194ef583b95cf09b01f9912c3a0",
+      "size": 11641301,
+      "name": "bybitbot-server-2.3.1.tar.gz"
     }
   }
 }
