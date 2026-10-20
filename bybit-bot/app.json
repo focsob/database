@@ -5,20 +5,20 @@
   "files": {
     "apk": {
       "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-2.0.1.apk",
-      "sha256": "a84e4f24a88ebab2956a54bdaf4ca9226545669bbe43d8d7573b442daffb2de6",
+      "sha256": "91b813799861b2dbdccc04941302fe9c1e97c20a40e8d302e5671ed9b1ce0aaa",
       "size": 4168323,
       "name": "BybitBot-2.0.1.apk"
     },
     "windows": {
       "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/BybitBot-windows-2.0.1.zip",
-      "sha256": "e7a073bb49bd52acb732c1b390e630941ce005635dfef00520bab7716c8fbc9b",
-      "size": 56800257,
+      "sha256": "842fc151bd72c178d179ecd598ba70d1d6f8404e42075bc41329e85843730488",
+      "size": 56800176,
       "name": "BybitBot-windows-2.0.1.zip"
     },
     "server": {
       "url": "https://github.com/focsob/database/releases/download/bybit-bot-v2.0.1/bybitbot-server-2.0.1.tar.gz",
-      "sha256": "6af8fc7ef50f5437530675d763328248021566004e46509933140e6a88577fb4",
-      "size": 11334269,
+      "sha256": "5b658af4bc80633225667323538e327f03e05c248efa147c9638d9d556257560",
+      "size": 11334268,
       "name": "bybitbot-server-2.0.1.tar.gz"
     }
   }
