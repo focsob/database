@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bybit Bot server — one-command install / upgrade for Ubuntu Server 24.04 (x64).
+# Bybit Bot server — one-command install / upgrade for Ubuntu Server 24.04 or 26.04 (x64).
 #
 #   curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh | sudo bash
 #
@@ -8,7 +8,7 @@
 # Running it again upgrades the program and keeps all settings, accounts and passwords.
 #
 # Options (or the matching environment variables):
-#   --domain NAME      BYBITBOT_DOMAIN   default s1233505.switzerlandnorth.cloudapp.azure.com
+#   --domain NAME      BYBITBOT_DOMAIN   default s1233505.francecentral.cloudapp.azure.com
 #   --port N           BYBITBOT_PORT     HTTPS port for the web panel, default 8443
 #   --email ADDR       BYBITBOT_EMAIL    e-mail for Let's Encrypt expiry notices (optional)
 #   --yes                                no questions, use defaults / previous answers
@@ -25,7 +25,7 @@ DATA_DIR=/var/lib/bybitbot
 CONF_DIR=/etc/bybitbot
 CONF="$CONF_DIR/install.conf"
 INTERNAL_PORT=18080
-DEFAULT_DOMAIN="s1233505.switzerlandnorth.cloudapp.azure.com"
+DEFAULT_DOMAIN="s1233505.francecentral.cloudapp.azure.com"
 
 say()  { printf '\033[1;33m==>\033[0m %s\n' "$*"; }
 ok()   { printf '\033[1;32m ✓\033[0m %s\n' "$*"; }
@@ -74,13 +74,16 @@ fi
 
 # ---------- checks ----------
 . /etc/os-release 2>/dev/null || true
-if [ "${ID:-}" != "ubuntu" ]; then warn "呢個安裝程式係為 Ubuntu 24.04 寫嘅，你嘅系統係 ${PRETTY_NAME:-未知}，照樣繼續"; fi
+if [ "${ID:-}" != "ubuntu" ]; then warn "呢個安裝程式係為 Ubuntu 24.04／26.04 寫嘅，你嘅系統係 ${PRETTY_NAME:-未知}，照樣繼續"
+else case "${VERSION_ID:-}" in 24.04|26.04) ;; *) warn "呢個安裝程式喺 Ubuntu 24.04 同 26.04 測試過，你嘅係 ${PRETTY_NAME:-未知}，照樣繼續" ;; esac; fi
 case "$(uname -m)" in x86_64|amd64) ;; *) warn "呢個安裝程式係為 x64 寫嘅，你嘅 CPU 係 $(uname -m)，照樣繼續" ;; esac
 
 # previous answers
 if [ -f "$CONF" ]; then
   # shellcheck disable=SC1090
   . "$CONF"
+  # the old default domain moved to France Central: follow it; a domain you chose yourself stays
+  [ "${SAVED_DOMAIN:-}" = "s1233505.switzerlandnorth.cloudapp.azure.com" ] && SAVED_DOMAIN="$DEFAULT_DOMAIN"
   DOMAIN="${DOMAIN:-${SAVED_DOMAIN:-}}"
   PORT="${PORT:-${SAVED_PORT:-}}"
   EMAIL="${EMAIL:-${SAVED_EMAIL:-}}"
@@ -132,14 +135,22 @@ fi
 
 # ---------- packages ----------
 export DEBIAN_FRONTEND=noninteractive
-say "安裝系統套件（Java 21、Caddy、chrony 時間同步）"
+say "安裝系統套件（Java、Caddy、chrony 時間同步）"
 if [ "${SKIP_APT:-0}" != "1" ]; then
   apt-get update -qq
-  apt-get install -y -qq openjdk-21-jre-headless curl ca-certificates tar gnupg python3 debian-keyring debian-archive-keyring apt-transport-https >/dev/null
+  apt-get install -y -qq curl ca-certificates tar gnupg python3 >/dev/null
+  # Java 21 (Ubuntu 24.04); Ubuntu 26.04 defaults to Java 25, which runs the program the same way
+  if ! command -v java >/dev/null; then
+    apt-get install -y -qq openjdk-21-jre-headless >/dev/null 2>&1 \
+      || apt-get install -y -qq openjdk-25-jre-headless >/dev/null 2>&1 \
+      || apt-get install -y -qq default-jre-headless >/dev/null 2>&1 || true
+  fi
+  # only needed by older releases for the Caddy repository; missing on newer Ubuntu is fine
+  for p in debian-keyring debian-archive-keyring apt-transport-https; do apt-get install -y -qq "$p" >/dev/null 2>&1 || true; done
   # Caddy from its own repository: Ubuntu's older Caddy lacks the HTTP→HTTPS redirect on the panel port
   if [ ! -f /etc/apt/sources.list.d/caddy-stable.list ]; then
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
-    curl -1sLf 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
+    curl -1sLf --retry 3 --max-time 60 'https://dl.cloudsmith.io/public/caddy/stable/gpg.key' | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg
+    curl -1sLf --retry 3 --max-time 60 'https://dl.cloudsmith.io/public/caddy/stable/debian.deb.txt' > /etc/apt/sources.list.d/caddy-stable.list
     apt-get update -qq
   fi
   apt-get install -y -qq caddy >/dev/null
@@ -179,13 +190,13 @@ elif [ -n "${BYBITBOT_PACKAGE:-}" ]; then
   tar -xzf "$BYBITBOT_PACKAGE" -C "$TMP/pkg"
 else
   say "下載最新版本"
-  curl -fsSL "$MANIFEST_URL?t=$(date +%s)" -o "$TMP/app.json" || die "下載版本資料失敗：$MANIFEST_URL"
+  curl -fsSL --retry 3 --max-time 60 "$MANIFEST_URL?t=$(date +%s)" -o "$TMP/app.json" || die "下載版本資料失敗：$MANIFEST_URL"
   read -r URL SHA VERSION < <(python3 -c '
 import json, sys
 m = json.load(open(sys.argv[1]))
 f = m["files"]["server"]
 print(f["url"], f["sha256"], m["versionName"])' "$TMP/app.json") || die "版本資料格式唔啱"
-  curl -fL --retry 3 -o "$TMP/server.tar.gz" "$URL" || die "下載程式失敗：$URL"
+  curl -fL --retry 3 --max-time 900 -o "$TMP/server.tar.gz" "$URL" || die "下載程式失敗：$URL"
   echo "$SHA  $TMP/server.tar.gz" | sha256sum -c --quiet - || die "下載檔案校驗失敗（SHA-256 唔夾），已停止安裝"
   mkdir -p "$TMP/pkg"
   tar -xzf "$TMP/server.tar.gz" -C "$TMP/pkg"
