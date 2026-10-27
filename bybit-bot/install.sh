@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Bybit Bot server — one-command install / upgrade for Ubuntu Server 24.04 or 26.04 (x64).
+# Bybit Bot server — one-command install / upgrade for Ubuntu Server 26.04 (x64).
 #
 #   curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh | sudo bash
 #
@@ -74,8 +74,8 @@ fi
 
 # ---------- checks ----------
 . /etc/os-release 2>/dev/null || true
-if [ "${ID:-}" != "ubuntu" ]; then warn "呢個安裝程式係為 Ubuntu 24.04／26.04 寫嘅，你嘅系統係 ${PRETTY_NAME:-未知}，照樣繼續"
-else case "${VERSION_ID:-}" in 24.04|26.04) ;; *) warn "呢個安裝程式喺 Ubuntu 24.04 同 26.04 測試過，你嘅係 ${PRETTY_NAME:-未知}，照樣繼續" ;; esac; fi
+if [ "${ID:-}" != "ubuntu" ]; then warn "呢個安裝程式係為 Ubuntu 26.04 寫嘅，你嘅系統係 ${PRETTY_NAME:-未知}，照樣繼續"
+else case "${VERSION_ID:-}" in 26.04) ;; *) warn "呢個安裝程式只喺 Ubuntu 26.04 測試過，你嘅係 ${PRETTY_NAME:-未知}，照樣繼續" ;; esac; fi
 case "$(uname -m)" in x86_64|amd64) ;; *) warn "呢個安裝程式係為 x64 寫嘅，你嘅 CPU 係 $(uname -m)，照樣繼續" ;; esac
 
 # previous answers
@@ -139,7 +139,7 @@ say "安裝系統套件（Java、Caddy、chrony 時間同步）"
 if [ "${SKIP_APT:-0}" != "1" ]; then
   apt-get update -qq
   apt-get install -y -qq curl ca-certificates tar gnupg python3 >/dev/null
-  # Java 21 (Ubuntu 24.04); Ubuntu 26.04 defaults to Java 25, which runs the program the same way
+  # Java 21 when the release has it, otherwise Ubuntu 26.04's default Java 25 (runs the program the same way)
   if ! command -v java >/dev/null; then
     apt-get install -y -qq openjdk-21-jre-headless >/dev/null 2>&1 \
       || apt-get install -y -qq openjdk-25-jre-headless >/dev/null 2>&1 \
@@ -368,7 +368,10 @@ fi
 MT5_DIR="$DATA_DIR/mt5"
 MT5_PREFIX="$MT5_DIR/wine"
 MT5_TERM="$MT5_PREFIX/drive_c/Program Files/MetaTrader 5"
-MT5_SETUP_URL="${BYBITBOT_MT5_SETUP_URL:-https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe}"
+# MetaQuotes' current installer (the one on metatrader5.com; under Wine it installs in seconds), and
+# the older mql5.com one when that site fails
+MT5_SETUP_URL="${BYBITBOT_MT5_SETUP_URL:-https://download.terminal.free/cdn/web/metaquotes.ltd/mt5/mt5setup.exe}"
+MT5_SETUP_URL2="https://download.mql5.com/cdn/web/metaquotes.software.corp/mt5/mt5setup.exe"
 # Edge WebView2 runtime: MetaQuotes' own Linux script installs it before MT5
 WEBVIEW2_URL="${BYBITBOT_WEBVIEW2_URL:-https://go.microsoft.com/fwlink/p/?LinkId=2124703}"
 MT5_SETUP_WAIT="${BYBITBOT_MT5_SETUP_WAIT:-1200}"
@@ -384,7 +387,8 @@ mt5_display_start() {
   local n
   for n in $(seq 90 119); do
     if [ -e "/tmp/.X11-unix/X$n" ] || [ -e "/tmp/.X$n-lock" ]; then continue; fi
-    runuser -u "$APP" -- Xvfb ":$n" -screen 0 1280x1024x24 -nolisten tcp >/dev/null 2>&1 &
+    # -noreset: Wine's helper processes come and go; a reset in between drops the next client
+    runuser -u "$APP" -- Xvfb ":$n" -screen 0 1280x1024x24 -nolisten tcp -noreset >>"$MT5_DIR/xvfb.log" 2>&1 &
     for _ in $(seq 1 50); do
       if [ -e "/tmp/.X11-unix/X$n" ]; then MT5_DISPLAY=":$n"; return 0; fi
       sleep 0.1
@@ -409,7 +413,7 @@ mt5_screen() {
 mt5_gecko() {
   local dir ver arch f
   dir="$(dirname "$(dirname "$(readlink -f "$1")")")"
-  ver="$(grep -aoE 'wine-gecko-[0-9]+\.[0-9]+(\.[0-9]+)?-' "$dir"/lib/wine/x86_64-windows/appwiz.cpl "$dir"/lib*/wine/*/appwiz.cpl 2>/dev/null | head -1 | sed -E 's/.*wine-gecko-([0-9.]+)-.*/\1/')"
+  ver="$(grep -aoE 'wine-gecko-[0-9]+\.[0-9]+(\.[0-9]+)?-' "$dir"/lib/wine/x86_64-windows/appwiz.cpl "$dir"/lib*/wine/*/appwiz.cpl "$dir"/lib/*/wine/*/appwiz.cpl 2>/dev/null | head -1 | sed -E 's/.*wine-gecko-([0-9.]+)-.*/\1/')" || true
   [ -n "$ver" ] || ver="${BYBITBOT_GECKO_VERSION:-2.47.4}"
   install -d -m 0700 -o "$APP" -g "$APP" "$MT5_DIR/home/.cache" "$MT5_DIR/home/.cache/wine"
   for arch in x86 x86_64; do
@@ -423,16 +427,22 @@ mt5_gecko() {
 }
 find_wine() {
   local c
-  for c in "$(command -v wine 2>/dev/null)" "$(command -v wine64 2>/dev/null)" /opt/wine-stable/bin/wine /opt/wine-staging/bin/wine; do
+  for c in "$(command -v wine 2>/dev/null)" "$(command -v wine64 2>/dev/null)" /opt/wine-devel/bin/wine /opt/wine-stable/bin/wine /opt/wine-staging/bin/wine; do
+    if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; return 0; fi
+  done
+  return 1
+}
+find_wineserver() {
+  local w c
+  w="$(find_wine)" || return 1
+  for c in "$(dirname "$w")/wineserver" "$(command -v wineserver 2>/dev/null)" /usr/lib/wine/wineserver /usr/lib/wine/wineserver64 /usr/lib/x86_64-linux-gnu/wine/wineserver; do
     if [ -n "$c" ] && [ -x "$c" ]; then echo "$c"; return 0; fi
   done
   return 1
 }
 kill_wine() {
-  local w srv
-  w="$(find_wine)" || return 0
-  srv="$(dirname "$w")/wineserver"
-  [ -x "$srv" ] || srv="$(command -v wineserver || echo wineserver)"
+  local srv
+  srv="$(find_wineserver)" || return 0
   as_app "$srv" -k >/dev/null 2>&1 || true
 }
 
@@ -490,26 +500,55 @@ WantedBy=multi-user.target
 UNIT
 }
 
+# Wine for MT5: WineHQ's development build 11.20 (checked on Ubuntu 26.04: the MT5 installer, the
+# terminal and MetaEditor all run). Ubuntu's own Wine 10 hangs in MetaEditor and does not start the
+# terminal. The version is held so a system update does not change it; BYBITBOT_WINE_VERSION picks
+# another one. Ubuntu's Wine or WineHQ's stable Wine from an earlier install is replaced.
+APT_LOG=/var/log/bybitbot-mt5-apt.log
+WINE_VERSION="${BYBITBOT_WINE_VERSION:-11.20}"
+mt5_apt() { timeout 1800 apt-get "$@" >>"$APT_LOG" 2>&1; }
 install_wine() {
   [ "${SKIP_APT:-0}" = "1" ] && return 0
-  say "安裝 Wine、虛擬顯示（Xvfb）同截圖工具"
+  say "安裝 Wine $WINE_VERSION（WineHQ 開發版）、虛擬顯示（Xvfb）同截圖工具（記錄喺 $APT_LOG）"
+  : >"$APT_LOG"
   dpkg --add-architecture i386
-  local code="${VERSION_CODENAME:-noble}" got=0
+  local code="${VERSION_CODENAME:-resolute}" w ver v p old="" avahi=0
   install -d -m 0755 /etc/apt/keyrings
-  # WineHQ's own packages (what MetaQuotes recommends for MT5); Ubuntu's Wine when that fails
-  if curl -fsSL https://dl.winehq.org/wine-builds/winehq.key -o /etc/apt/keyrings/winehq-archive.key \
-     && curl -fsSL "https://dl.winehq.org/wine-builds/ubuntu/dists/$code/winehq-$code.sources" -o "/etc/apt/sources.list.d/winehq-$code.sources"; then
-    apt-get update -qq || true
-    if apt-get install -y -qq --install-recommends winehq-stable >/dev/null; then got=1; ok "WineHQ 穩定版"; fi
+  # the key dearmored: APT on 26.04 does not read an ASCII-armored key from a .key file
+  curl -fsSL --retry 3 --max-time 60 https://dl.winehq.org/wine-builds/winehq.key | gpg --dearmor --yes -o /etc/apt/keyrings/winehq-archive.key \
+    && curl -fsSL --retry 3 --max-time 60 "https://dl.winehq.org/wine-builds/ubuntu/dists/$code/winehq-$code.sources" -o "/etc/apt/sources.list.d/winehq-$code.sources" \
+    || die "下載唔到 WineHQ 套件來源（dl.winehq.org）"
+  sed -i 's#^Signed-By:.*#Signed-By: /etc/apt/keyrings/winehq-archive.key#' "/etc/apt/sources.list.d/winehq-$code.sources"
+  # other Wine builds share the wine command: take them out first
+  for p in winehq-stable wine-stable wine-stable-amd64 wine-stable-i386:i386 wine wine64 wine32:i386 libwine libwine:i386; do
+    dpkg -s "$p" >/dev/null 2>&1 && old="$old $p"
+  done
+  if [ -n "$old" ]; then
+    # shellcheck disable=SC2086
+    apt-mark unhold $old >/dev/null 2>&1 || true
+    # shellcheck disable=SC2086
+    mt5_apt remove -y $old || true
   fi
-  if [ "$got" -eq 0 ]; then
-    warn "WineHQ 安裝唔到，改用 Ubuntu 內置嘅 Wine"
-    rm -f "/etc/apt/sources.list.d/winehq-$code.sources"
-    apt-get update -qq || true
-    apt-get install -y -qq wine64 wine >/dev/null || die "安裝 Wine 失敗"
-    apt-get install -y -qq wine32:i386 >/dev/null 2>&1 || warn "冇 32 位元 Wine（MT5 係 64 位元，通常唔影響）"
+  systemctl list-unit-files avahi-daemon.service >/dev/null 2>&1 && dpkg -s avahi-daemon >/dev/null 2>&1 && avahi=1
+  mt5_apt update || true
+  # awk reads to the end: stopping early would end apt-cache with SIGPIPE (and the script with it)
+  v="$(apt-cache madison winehq-devel 2>/dev/null | awk -v want="$WINE_VERSION~" 'index($3, want) == 1 && v == "" {v = $3} END {print v}')" || v=""
+  apt-mark unhold winehq-devel wine-devel >/dev/null 2>&1 || true
+  if [ -n "$v" ]; then
+    mt5_apt install -y --install-recommends --allow-downgrades "winehq-devel=$v" "wine-devel=$v" || die "安裝 Wine $v 失敗（睇 $APT_LOG）"
+  else
+    warn "WineHQ 冇 Wine $WINE_VERSION，裝最新開發版"
+    mt5_apt install -y --install-recommends winehq-devel || die "安裝 Wine 失敗（睇 $APT_LOG）"
   fi
-  apt-get install -y -qq xvfb xauth x11-apps python3 >/dev/null || die "安裝 Xvfb 失敗"
+  apt-mark hold winehq-devel wine-devel >/dev/null 2>&1 || true
+  # a recommended package; a trading server has no use for local network discovery
+  if [ "$avahi" = "0" ] && dpkg -s avahi-daemon >/dev/null 2>&1; then
+    systemctl disable --now avahi-daemon.socket avahi-daemon.service >/dev/null 2>&1 || true
+  fi
+  mt5_apt install -y xvfb xauth x11-apps x11-utils x11-xkb-utils xkb-data python3 || die "安裝 Xvfb 失敗（睇 $APT_LOG）"
+  w="$(find_wine)" || die "搵唔到 Wine（睇 $APT_LOG）"
+  ver="$("$w" --version 2>/dev/null)"
+  ok "Wine：$ver"
 }
 
 install_mt5() {
@@ -530,7 +569,22 @@ install_mt5() {
     gecko="$(mt5_gecko "$wine")"
     echo "Wine $("$wine" --version 2>/dev/null), Gecko $gecko" >>"$MT5_DIR/install-wine.log"
     as_app timeout 600 "$wine" wineboot --init >>"$MT5_DIR/install-wine.log" 2>&1 || true
-    [ -f "$MT5_PREFIX/system.reg" ] || { mt5_screen wineboot; mt5_display_stop; die "建立 Wine 環境失敗"; }
+    as_app timeout 120 "$(find_wineserver)" -w >/dev/null 2>&1 || true
+    if [ ! -f "$MT5_PREFIX/system.reg" ]; then
+      # once more on a new virtual screen, then without one (the Wine folder needs no screen)
+      mt5_screen wineboot
+      warn "第一次建立 Wine 環境唔成功，再試"
+      kill_wine; mt5_display_stop; mt5_display_start || true
+      as_app timeout 600 "$wine" wineboot --init >>"$MT5_DIR/install-wine.log" 2>&1 || true
+      as_app timeout 120 "$(find_wineserver)" -w >/dev/null 2>&1 || true
+    fi
+    if [ ! -f "$MT5_PREFIX/system.reg" ]; then
+      kill_wine
+      runuser -u "$APP" -- env HOME="$MT5_DIR/home" WINEPREFIX="$MT5_PREFIX" WINEARCH=win64 WINEDEBUG=-all WINEDLLOVERRIDES="mscoree=" \
+        timeout 600 "$wine" wineboot --init >>"$MT5_DIR/install-wine.log" 2>&1 || true
+      as_app timeout 120 "$(find_wineserver)" -w >/dev/null 2>&1 || true
+    fi
+    [ -f "$MT5_PREFIX/system.reg" ] || { mt5_screen wineboot2; mt5_display_stop; die "建立 Wine 環境失敗（Wine 輸出：$MT5_DIR/install-wine.log）"; }
   fi
   as_app "$wine" reg add 'HKCU\Software\Wine' /v Version /t REG_SZ /d win10 /f >>"$MT5_DIR/install-wine.log" 2>&1 || true
   if [ ! -f "$MT5_DIR/webview2.done" ]; then
@@ -551,23 +605,37 @@ install_mt5() {
   fi
   if [ ! -f "$MT5_TERM/terminal64.exe" ]; then
     say "下載同安裝 MT5 終端機（大約 5 分鐘）"
-    curl -fL --retry 3 -o "$MT5_DIR/mt5setup.exe" "$MT5_SETUP_URL" || { mt5_display_stop; die "下載 MT5 安裝程式失敗：$MT5_SETUP_URL"; }
+    if ! curl -fsSL --retry 3 --max-time 600 -o "$MT5_DIR/mt5setup.exe" "$MT5_SETUP_URL" 2>"$MT5_DIR/download.err" \
+       && ! curl -fsSL --retry 3 --max-time 600 -o "$MT5_DIR/mt5setup.exe" "$MT5_SETUP_URL2" 2>>"$MT5_DIR/download.err"; then
+      mt5_display_stop
+      if grep -qi "certificate" "$MT5_DIR/download.err"; then
+        die "下載 MT5 安裝程式失敗：MetaQuotes 下載網站嘅證書有問題（$(grep -i certificate "$MT5_DIR/download.err" | head -1)）。通常係對方暫時出錯，遲啲再執行：sudo $APP mt5-setup"
+      fi
+      die "下載 MT5 安裝程式失敗：$(tail -1 "$MT5_DIR/download.err")"
+    fi
     chown "$APP:$APP" "$MT5_DIR/mt5setup.exe"
+    echo "== mt5setup.exe /auto $(date -u +%FT%TZ)" >>"$MT5_DIR/install-wine.log"
+    # no Wine debug output here: MetaQuotes' protection can take Wine's tracing for a debugger
     as_app timeout "$MT5_SETUP_WAIT" "$wine" "$MT5_DIR/mt5setup.exe" /auto >>"$MT5_DIR/install-wine.log" 2>&1 &
     pid=$!
+    local waited=0 shots=0
     for _ in $(seq 1 "$MT5_SETUP_WAIT"); do
-      found="$(find "$MT5_PREFIX/drive_c" -maxdepth 4 -name terminal64.exe -path '*MetaTrader*' 2>/dev/null | head -1)"
+      found="$(find "$MT5_PREFIX/drive_c" -maxdepth 4 -name terminal64.exe -path '*MetaTrader*' 2>/dev/null | head -1)" || true
       if [ -n "$found" ] && [ -f "$(dirname "$found")/MetaEditor64.exe" ]; then break; fi
       kill -0 "$pid" 2>/dev/null || break
       sleep 1
+      waited=$((waited + 1))
+      # a picture of the screen now and then, to see a window waiting for an answer
+      if [ $((waited % 90)) -eq 0 ] && [ "$shots" -lt 8 ]; then shots=$((shots + 1)); mt5_screen "setup-$shots"; fi
     done
+    echo "== mt5setup.exe after ${waited}s: $(if kill -0 "$pid" 2>/dev/null; then echo running; else echo ended; fi), terminal: ${found:-none}" >>"$MT5_DIR/install-wine.log"
     # let the installer finish writing, then stop it (it opens the terminal at the end)
     if [ -n "$found" ]; then sleep 30; fi
     mt5_screen setup
     kill_wine
     kill "$pid" 2>/dev/null || true
     wait "$pid" 2>/dev/null || true
-    found="$(find "$MT5_PREFIX/drive_c" -maxdepth 4 -name terminal64.exe -path '*MetaTrader*' 2>/dev/null | head -1)"
+    found="$(find "$MT5_PREFIX/drive_c" -maxdepth 4 -name terminal64.exe -path '*MetaTrader*' 2>/dev/null | head -1)" || true
     if [ -z "$found" ]; then
       mt5_display_stop
       die "MT5 安裝失敗（搵唔到 terminal64.exe；Wine 輸出：$MT5_DIR/install-wine.log）。可以再執行一次：sudo $APP mt5-setup"
@@ -591,6 +659,14 @@ install_mt5() {
 if [ "$WANT_MT5" -eq 1 ]; then
   install_mt5
   write_conf
+elif [ "$HAVE_MT5" -eq 1 ] && [ -f "$MT5_DIR/setup.json" ]; then
+  # an update moves an existing MT5 to the Wine this version runs it on
+  cur_wine="$(w="$(find_wine)" && "$w" --version 2>/dev/null)" || cur_wine=""
+  if [ "$cur_wine" != "wine-$WINE_VERSION" ]; then
+    systemctl stop "$APP-mt5" 2>/dev/null || true
+    kill_wine
+    ( install_wine ) || warn "換 Wine 唔成功（睇 $APT_LOG），MT5 照用原本嘅 Wine"
+  fi
 fi
 if [ "$HAVE_MT5" -eq 1 ] && [ -f "$MT5_DIR/setup.json" ]; then
   mt5_runner_from_jar
