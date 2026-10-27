@@ -1,13 +1,13 @@
 {
-  "versionCode": 20804,
-  "versionName": "2.8.4",
-  "notes": "## 2.8.4（2026-10-27）\n\n- MT5：「系統」頁 MT5 卡加咗「複製狀態同日誌」掣（MT5 日誌框入面亦有「一鍵複製日誌」）：一按就複製版本、MT5 狀態、Wine、EA 同帳戶資料（唔包密碼）同最近嘅 MT5 日誌，可以直接貼上傳俾人睇\n- MT5 日誌保留多啲行（終端機 40 行、EA 15 行），唔再顯示策略測試器（Tester）嘅雲端通知\n- 「下載錯誤報告」加埋 MT5 部分：MT5 狀態、Wine 版本、EA 同帳戶資料、EA 編譯訊息同 MT5 日誌（唔包密碼）",
+  "versionCode": 20805,
+  "versionName": "2.8.5",
+  "notes": "## 2.8.5（2026-10-27）\n\n- 修正 MT5 一直「未連上經紀」：伺服器上面嘅 MetaQuotes 原版 MT5 只識自己嘅示範伺服器，用設定檔登入 Bybit-Live 根本唔會嘗試連線（MT5 日誌一行網絡記錄都冇）。而家 MT5 啟動一分半鐘都未連上，程式會自動（每個伺服器名一次）喺 MT5 嘅「Open an Account（開戶）」搜尋經紀（Bybit-Live 就搜尋「Bybit」），將經紀嘅伺服器加入 MT5，再用你嘅帳戶重新登入，唔使你做任何嘢（雲端測試：搜尋之後 MT5 即刻向 Bybit-Live 登入）\n- 搜尋唔到會顯示「搵唔到伺服器」同要檢查嘅地方；改好伺服器名儲存，或者撳「重新啟動 MT5」會再搜尋\n- 新經紀冇之前用開嘅圖表品種（例如 Bybit 嘅 EURUSD 叫 EURUSD+）時，程式會自動試其他品種開圖表",
   "files": {
     "server": {
-      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.8.4.tar.gz",
-      "sha256": "3adf56a018456233d8353db875503789b1cb1eb17d78c8f9910f172617d219d1",
-      "size": 12245486,
-      "name": "bybitbot-server-2.8.4.tar.gz"
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.8.5.tar.gz",
+      "sha256": "5af051f527a3a0cf69db865045167dc3b783157ebf58111997170a37cae9ef09",
+      "size": 12272757,
+      "name": "bybitbot-server-2.8.5.tar.gz"
     }
   }
 }
