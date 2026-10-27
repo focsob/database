@@ -1,13 +1,13 @@
 {
-  "versionCode": 20802,
-  "versionName": "2.8.2",
-  "notes": "## 2.8.2（2026-10-27）\n\n全面檢查代碼之後修正：\n- 盈虧記錄：同一個品種上一單平倉後一分鐘內再開新單，新單平倉時有機會連上一單嘅盈虧一齊計（查交易所記錄時為咗時鐘誤差會向前睇一分鐘）；而家每個品種記住已經計過嘅最後一次平倉，唔會重複計；MT5 亦只計呢段時間開嘅倉\n- MT5：前一日高低位、每日 ATR 同揀品種用嘅日線改為由每小時 K 線砌返 UTC 日（星期一至五），同 MT5 回測一樣；之前用經紀日線（由經紀伺服器午夜開始），前一日高低位同每日 ATR 會讀唔到\n- 交易 AI 新聞傳導入場都跟「交易時段適用於」設定\n- 安裝程式換 Wine 時先下載好新版本先移除舊版本：下載失敗 MT5 照用原本嘅 Wine；「系統」頁 MT5 會顯示 Wine 版本，太舊會提你執行 `sudo bybitbot mt5-setup`\n- MT5 EA 遲咗嘅回覆檔會定時清走；Telegram 狀態顯示帳戶自己嘅貨幣（MT5 係 USD）",
+  "versionCode": 20803,
+  "versionName": "2.8.3",
+  "notes": "## 2.8.3（2026-10-27）\n\n- 修正網頁「暫停交易並更新」同自動更新失敗（「解壓失敗：tar: … Cannot open: Function not implemented」）：Ubuntu 26.04 嘅系統解壓工具喺 Bybit Bot 服務嘅安全限制入面開唔到檔案，而家改為由程式自己解壓；雲端測試會喺真實服務入面做一次網頁更新確認\n- 由 2.8.2 或之前嘅版本升級，要經 SSH 執行一次 `sudo bybitbot update`（舊版本嘅網頁更新本身壞咗）；之後網頁更新就正常",
   "files": {
     "server": {
-      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.8.2.tar.gz",
-      "sha256": "930f5a1db86a9f692dc17644c0f8bb5cc2f9e592480860b3f1612b8e31acb535",
-      "size": 12236273,
-      "name": "bybitbot-server-2.8.2.tar.gz"
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.8.3.tar.gz",
+      "sha256": "728ce21431dfe5ddafe1e3c77517c2b902f54ddb70cdcee8b85be95b923b620c",
+      "size": 12241586,
+      "name": "bybitbot-server-2.8.3.tar.gz"
     }
   }
 }
