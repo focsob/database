@@ -1,13 +1,13 @@
 {
-  "versionCode": 20805,
-  "versionName": "2.8.5",
-  "notes": "## 2.8.5（2026-10-27）\n\n- 修正 MT5 一直「未連上經紀」：伺服器上面嘅 MetaQuotes 原版 MT5 只識自己嘅示範伺服器，用設定檔登入 Bybit-Live 根本唔會嘗試連線（MT5 日誌一行網絡記錄都冇）。而家 MT5 啟動一分半鐘都未連上，程式會自動（每個伺服器名一次）喺 MT5 嘅「Open an Account（開戶）」搜尋經紀（Bybit-Live 就搜尋「Bybit」），將經紀嘅伺服器加入 MT5，再用你嘅帳戶重新登入，唔使你做任何嘢（雲端測試：搜尋之後 MT5 即刻向 Bybit-Live 登入）\n- 搜尋唔到會顯示「搵唔到伺服器」同要檢查嘅地方；改好伺服器名儲存，或者撳「重新啟動 MT5」會再搜尋\n- 新經紀冇之前用開嘅圖表品種（例如 Bybit 嘅 EURUSD 叫 EURUSD+）時，程式會自動試其他品種開圖表",
+  "versionCode": 20900,
+  "versionName": "2.9.0",
+  "notes": "## 2.9.0（2026-10-28）\n\nAI 型號清單同額度後備（新聞分析同交易 AI 都用）：\n- 每個 AI 可以有幾個型號（最多 8 個），由最強排起：每次用排第一個仲有額度嘅型號；某個型號額度用完（例如 Gemini 免費額度嘅每日次數），自動轉用下一個，等佢恢復（Gemini 係美國太平洋時間午夜）就自動轉返用最強嗰個。只會喺同一個 AI 服務嘅型號之間轉，唔會轉去其他公司\n- 「自動揀型號」（預設開）：雲端每日由公開資料整理一份型號清單（OpenRouter 公開型號清單同佢列出嘅 Artificial Analysis 智能指數、Google Gemini 價錢頁嘅免費額度型號、Groq 額度頁，放喺 focsob/database），程式每日下載，再用你嘅 API Key 問返個服務有咩型號用得，自動排次序：Gemini、Groq、OpenRouter 只用免費額度型號；ChatGPT、Claude、DeepSeek 用最強嘅型號。2.9.0 之前自己填過型號嘅會照用，唔會自動改\n- 取消剔「自動揀型號」可以自己加、刪同排型號次序；「立即更新型號」即刻重新檢查\n- 「系統」頁每個型號顯示：智能指數、係咪免費、額度（每分鐘／每日次數）、今日用咗幾多次、暫停到幾時同原因、而家用緊邊個\n- 新增兩個有免費額度嘅 AI：Groq（免費計劃）同 OpenRouter（免費型號：所有免費型號一齊計每日次數，用完等到世界協調時間（UTC）午夜）\n- 所有型號暫時用唔到唔當出錯：新聞用其他 AI 或者內置規則；交易 AI 嗰段時間唔問 AI，照書落單\n- 暫停、額度同今日次數會記低，重新啟動或者更新之後唔會再問已經用完額度嘅型號\n- 「下載錯誤報告」加埋每個 AI 嘅型號次序、自動定自訂、暫停中嘅型號同型號清單日期\n\n再次全面檢查代碼之後修正：\n- MT5 前一日高低位同每日 ATR：MT5 嘅日線只有星期一至五，星期一之前讀唔到「前一日」（星期日冇日線），所以星期一冇前一日高低位目標、支持阻力入場同每日 ATR 止蝕止賺；而家星期一用星期五（同書一樣係「前一個交易日」），MT5 回測同「預設」亦跟住改\n- MT5 自動搜尋經紀伺服器只會喺 MT5 啟動之後從未連上先做；之前連上咗、之後經紀伺服器短暫斷線（例如週末維護），唔會再停低 MT5 去搜尋\n- MT5 視窗小程式：多行文字唔會打亂讀取到嘅視窗清單\n- 落單面板 MT5 品種清單：改咗伺服器名都會即刻重新讀\n- Bybit 落單：Bybit 伺服器出錯（HTTP 5xx）連重試都失敗時，會用訂單自訂編號查返張單其實有冇落到，唔會誤報落單失敗\n- 登入：帳戶名前後加空格唔可以避開連續登入失敗嘅鎖定",
   "files": {
     "server": {
-      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.8.5.tar.gz",
-      "sha256": "5af051f527a3a0cf69db865045167dc3b783157ebf58111997170a37cae9ef09",
-      "size": 12272757,
-      "name": "bybitbot-server-2.8.5.tar.gz"
+      "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-2.9.0.tar.gz",
+      "sha256": "3da744f287010a19d65a5fef61f7a64fcfa548782c6bbcdc1e0156ef578ad9f7",
+      "size": 12402276,
+      "name": "bybitbot-server-2.9.0.tar.gz"
     }
   }
 }
