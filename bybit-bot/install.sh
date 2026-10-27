@@ -519,27 +519,25 @@ install_wine() {
     && curl -fsSL --retry 3 --max-time 60 "https://dl.winehq.org/wine-builds/ubuntu/dists/$code/winehq-$code.sources" -o "/etc/apt/sources.list.d/winehq-$code.sources" \
     || die "下載唔到 WineHQ 套件來源（dl.winehq.org）"
   sed -i 's#^Signed-By:.*#Signed-By: /etc/apt/keyrings/winehq-archive.key#' "/etc/apt/sources.list.d/winehq-$code.sources"
-  # other Wine builds share the wine command: take them out first
+  # other Wine builds share the wine command: they make way, but only once the new one is downloaded
   for p in winehq-stable wine-stable wine-stable-amd64 wine-stable-i386:i386 wine wine64 wine32:i386 libwine libwine:i386; do
     dpkg -s "$p" >/dev/null 2>&1 && old="$old $p"
   done
-  if [ -n "$old" ]; then
-    # shellcheck disable=SC2086
-    apt-mark unhold $old >/dev/null 2>&1 || true
-    # shellcheck disable=SC2086
-    mt5_apt remove -y $old || true
-  fi
   systemctl list-unit-files avahi-daemon.service >/dev/null 2>&1 && dpkg -s avahi-daemon >/dev/null 2>&1 && avahi=1
   mt5_apt update || true
   # awk reads to the end: stopping early would end apt-cache with SIGPIPE (and the script with it)
   v="$(apt-cache madison winehq-devel 2>/dev/null | awk -v want="$WINE_VERSION~" 'index($3, want) == 1 && v == "" {v = $3} END {print v}')" || v=""
+  local want=(winehq-devel)
+  if [ -n "$v" ]; then want=("winehq-devel=$v" "wine-devel=$v"); else warn "WineHQ 冇 Wine $WINE_VERSION，裝最新開發版"; fi
+  # shellcheck disable=SC2086
+  [ -z "$old" ] || apt-mark unhold $old >/dev/null 2>&1 || true
   apt-mark unhold winehq-devel wine-devel >/dev/null 2>&1 || true
-  if [ -n "$v" ]; then
-    mt5_apt install -y --install-recommends --allow-downgrades "winehq-devel=$v" "wine-devel=$v" || die "安裝 Wine $v 失敗（睇 $APT_LOG）"
-  else
-    warn "WineHQ 冇 Wine $WINE_VERSION，裝最新開發版"
-    mt5_apt install -y --install-recommends winehq-devel || die "安裝 Wine 失敗（睇 $APT_LOG）"
+  mt5_apt install -y --install-recommends --allow-downgrades --download-only "${want[@]}" || die "下載 Wine 失敗（睇 $APT_LOG），原本嘅 Wine 冇改動"
+  if [ -n "$old" ]; then
+    # shellcheck disable=SC2086
+    mt5_apt remove -y $old || true
   fi
+  mt5_apt install -y --install-recommends --allow-downgrades "${want[@]}" || die "安裝 Wine 失敗（睇 $APT_LOG）"
   apt-mark hold winehq-devel wine-devel >/dev/null 2>&1 || true
   # a recommended package; a trading server has no use for local network discovery
   if [ "$avahi" = "0" ] && dpkg -s avahi-daemon >/dev/null 2>&1; then
