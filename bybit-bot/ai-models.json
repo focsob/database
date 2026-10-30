@@ -1,5 +1,5 @@
 {
-    "updated": "2026-10-29",
+    "updated": "2026-10-30",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -570,6 +570,16 @@
                     "created": 1780551208
                 },
                 {
+                    "id": "nvidia/nemotron-3.5-lightning:free",
+                    "name": "NVIDIA: Nemotron 3.5 Lightning (free)",
+                    "score": 5.5,
+                    "free": true,
+                    "rpm": 20,
+                    "rpd": 50,
+                    "context": 1000000,
+                    "created": 1786452751
+                },
+                {
                     "id": "recursive/flint-v1.0:free",
                     "name": "Recursive: Flint (free)",
                     "free": true,
@@ -604,15 +614,6 @@
                     "rpd": 50,
                     "context": 65536,
                     "created": 1786470519
-                },
-                {
-                    "id": "nvidia/nemotron-3.5-lightning:free",
-                    "name": "NVIDIA: Nemotron 3.5 Lightning (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 1000000,
-                    "created": 1786452751
                 },
                 {
                     "id": "poolside/laguna-s-2.1:free",
