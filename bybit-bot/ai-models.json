@@ -1,5 +1,5 @@
 {
-    "updated": "2026-10-31",
+    "updated": "2026-11-01",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -614,24 +614,6 @@
                     "rpd": 50,
                     "context": 65536,
                     "created": 1786470519
-                },
-                {
-                    "id": "poolside/laguna-s-2.1:free",
-                    "name": "Poolside: Laguna S 2.1 (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 262144,
-                    "created": 1784652683
-                },
-                {
-                    "id": "poolside/laguna-xs-2.1:free",
-                    "name": "Poolside: Laguna XS 2.1 (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 262144,
-                    "created": 1783002429
                 },
                 {
                     "id": "cohere/north-mini-code:free",
