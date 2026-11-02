@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-01",
+    "updated": "2026-11-02",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -500,7 +500,7 @@
                     "rpm": 30,
                     "rpd": 1000,
                     "tpm": 8000,
-                    "context": 1000000,
+                    "context": 1024000,
                     "created": 1786722910
                 },
                 {
