@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-02",
+    "updated": "2026-11-03",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -402,17 +402,18 @@
             "provider": "DEEPSEEK",
             "models": [
                 {
+                    "id": "deepseek-v4.1-flash-1017",
+                    "name": "DeepSeek: DeepSeek V4.1 Flash 1017",
+                    "score": 28.5,
+                    "context": 1048576,
+                    "created": 1792225624
+                },
+                {
                     "id": "deepseek-v4-pro-0813",
                     "name": "DeepSeek: DeepSeek V4 Pro 0813",
                     "score": 23.1,
                     "context": 1048576,
                     "created": 1786549364
-                },
-                {
-                    "id": "deepseek-v4.1-flash-1017",
-                    "name": "DeepSeek: DeepSeek V4.1 Flash 1017",
-                    "context": 1048576,
-                    "created": 1792225624
                 },
                 {
                     "id": "deepseek-v4.1-flash",
