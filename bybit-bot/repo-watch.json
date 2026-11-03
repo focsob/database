@@ -1,6 +1,6 @@
 {
  "v": 1,
- "checked": "2026-11-03T00:13:14Z",
+ "checked": "2026-11-03T09:32:02Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 46008,
+   "stars": 46170,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 4585,
+   "stars": 4682,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -46,7 +46,7 @@
    "date": "2026-10-27T08:38:40Z",
    "message": "Merge pull request #1613 from TauricResearch/v0.7.1",
    "release": "v0.7.1",
-   "stars": 119966,
+   "stars": 120113,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -58,7 +58,7 @@
    "date": "2026-11-01T16:25:06Z",
    "message": "research: deepen 持械入宋 report with primary catalog and episode evidence",
    "release": "v1.0.0",
-   "stars": 16989,
+   "stars": 16996,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -70,7 +70,7 @@
    "date": "2026-11-02T17:47:39Z",
    "message": "chore(ci): align uv action and deduplicate bandit (#600) (#605)",
    "release": "",
-   "stars": 3560,
+   "stars": 3569,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   }
