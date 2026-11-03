@@ -26,6 +26,9 @@ CONF_DIR=/etc/bybitbot
 CONF="$CONF_DIR/install.conf"
 INTERNAL_PORT=18080
 DEFAULT_DOMAIN="s1233505.francecentral.cloudapp.azure.com"
+# revision of the system settings below (service isolation, HTTPS); the program asks for a re-run when
+# its own SelfUpdate.INSTALLER_REV is higher
+INSTALLER_REV=2
 
 say()  { printf '\033[1;33m==>\033[0m %s\n' "$*"; }
 ok()   { printf '\033[1;32m ✓\033[0m %s\n' "$*"; }
@@ -251,10 +254,23 @@ RestrictNamespaces=yes
 LockPersonality=yes
 CapabilityBoundingSet=
 AmbientCapabilities=
+ProtectClock=yes
+ProtectHostname=yes
+ProtectKernelLogs=yes
+ProtectProc=invisible
+RestrictRealtime=yes
+RemoveIPC=yes
+RestrictAddressFamilies=AF_UNIX AF_INET AF_INET6 AF_NETLINK
+SystemCallArchitectures=native
+SystemCallFilter=@system-service
+SystemCallErrorNumber=EPERM
 
 [Install]
 WantedBy=multi-user.target
 EOF
+printf '%s\n' "$INSTALLER_REV" > "$DATA_DIR/installer.rev"
+chown "$APP:$APP" "$DATA_DIR/installer.rev"
+chmod 0600 "$DATA_DIR/installer.rev"
 
 # helper command
 cat > /usr/local/bin/$APP <<EOF
@@ -300,6 +316,7 @@ cat > /etc/caddy/Caddyfile <<EOF
 
 $DOMAIN:$PORT {
 	tls {
+		protocols tls1.3
 		issuer acme {
 			dir https://acme-v02.api.letsencrypt.org/directory
 $EMAIL_LINE
@@ -308,7 +325,7 @@ $EMAIL_LINE
 	}
 	encode zstd gzip
 	header {
-		Strict-Transport-Security "max-age=31536000"
+		Strict-Transport-Security "max-age=63072000; includeSubDomains"
 		-Server
 	}
 	reverse_proxy 127.0.0.1:$INTERNAL_PORT
@@ -494,6 +511,8 @@ RestrictSUIDSGID=yes
 LockPersonality=yes
 CapabilityBoundingSet=
 AmbientCapabilities=
+ProtectHostname=yes
+ProtectKernelLogs=yes
 
 [Install]
 WantedBy=multi-user.target
