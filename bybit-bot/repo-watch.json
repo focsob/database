@@ -1,6 +1,6 @@
 {
  "v": 1,
- "checked": "2026-11-03T09:32:02Z",
+ "checked": "2026-11-04T09:10:48Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 46170,
+   "stars": 46666,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 4682,
+   "stars": 5060,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -46,7 +46,7 @@
    "date": "2026-10-27T08:38:40Z",
    "message": "Merge pull request #1613 from TauricResearch/v0.7.1",
    "release": "v0.7.1",
-   "stars": 120113,
+   "stars": 120484,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -54,13 +54,13 @@
    "repo": "xbtlin/ai-berkshire",
    "what": "價值投資研究技能",
    "use": "長線組合：每月 AI 價值分析方法參考",
-   "sha": "9810840325cbd75851611ecdb0a60f5949046ef1",
-   "date": "2026-11-01T16:25:06Z",
-   "message": "research: deepen 持械入宋 report with primary catalog and episode evidence",
+   "sha": "ab758d78803d01ce585bf3dd1e241e23330116cd",
+   "date": "2026-11-04T07:19:14Z",
+   "message": "新增现代牙科投资研究及报告索引（2026-11-04）",
    "release": "v1.0.0",
-   "stars": 16996,
+   "stars": 17008,
    "available": true,
-   "changedAt": "2026-11-03T00:13:14Z"
+   "changedAt": "2026-11-04T09:10:48Z"
   },
   {
    "repo": "tradermonty/claude-trading-skills",
@@ -70,7 +70,7 @@
    "date": "2026-11-02T17:47:39Z",
    "message": "chore(ci): align uv action and deduplicate bandit (#600) (#605)",
    "release": "",
-   "stars": 3569,
+   "stars": 3594,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   }
