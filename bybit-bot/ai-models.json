@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-03",
+    "updated": "2026-11-04",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -7,28 +7,28 @@
                 {
                     "id": "claude-opus-5-5",
                     "name": "Anthropic: Claude Opus 5.5",
-                    "score": 58.4,
+                    "score": 59.1,
                     "context": 1000000,
                     "created": 1790094732
                 },
                 {
                     "id": "claude-sonnet-5-5",
                     "name": "Anthropic: Claude Sonnet 5.5",
-                    "score": 54.2,
+                    "score": 54.5,
                     "context": 1000000,
                     "created": 1790618686
                 },
                 {
                     "id": "claude-fable-5-1",
                     "name": "Anthropic: Claude Fable 5.1",
-                    "score": 49.7,
+                    "score": 50.0,
                     "context": 1000000,
                     "created": 1788285838
                 },
                 {
                     "id": "claude-haiku-5-5",
                     "name": "Anthropic: Claude Haiku 5.5",
-                    "score": 36.2,
+                    "score": 36.5,
                     "context": 1000000,
                     "created": 1791397883
                 },
@@ -114,41 +114,43 @@
                 {
                     "id": "gpt-6.1-sol",
                     "name": "OpenAI: GPT-6.1 Sol",
-                    "score": 54.5,
+                    "score": 54.6,
                     "context": 1050000,
                     "created": 1790702882
                 },
                 {
                     "id": "gpt-6.1-terra",
                     "name": "OpenAI: GPT-6.1 Terra",
-                    "score": 51.0,
+                    "score": 51.3,
                     "context": 1050000,
                     "created": 1793038409
                 },
                 {
-                    "id": "gpt-6-luna",
-                    "name": "OpenAI: GPT-6 Luna",
-                    "score": 27.8,
-                    "context": 1050000,
-                    "created": 1790100786
-                },
-                {
                     "id": "gpt-6-sol",
                     "name": "OpenAI: GPT-6 Sol",
+                    "score": 44.1,
                     "context": 1050000,
                     "created": 1790100775
+                },
+                {
+                    "id": "gpt-5.6-terra",
+                    "name": "OpenAI: GPT-5.6 Terra",
+                    "score": 32.2,
+                    "context": 1050000,
+                    "created": 1783590857
+                },
+                {
+                    "id": "gpt-6-luna",
+                    "name": "OpenAI: GPT-6 Luna",
+                    "score": 27.9,
+                    "context": 1050000,
+                    "created": 1790100786
                 },
                 {
                     "id": "gpt-5.6-luna",
                     "name": "OpenAI: GPT-5.6 Luna",
                     "context": 1050000,
                     "created": 1783590864
-                },
-                {
-                    "id": "gpt-5.6-terra",
-                    "name": "OpenAI: GPT-5.6 Terra",
-                    "context": 1050000,
-                    "created": 1783590857
                 },
                 {
                     "id": "gpt-5.6-sol",
@@ -404,7 +406,7 @@
                 {
                     "id": "deepseek-v4.1-flash-1017",
                     "name": "DeepSeek: DeepSeek V4.1 Flash 1017",
-                    "score": 28.5,
+                    "score": 28.6,
                     "context": 1048576,
                     "created": 1792225624
                 },
