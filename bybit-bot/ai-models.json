@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-04",
+    "updated": "2026-11-05",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -31,6 +31,13 @@
                     "score": 36.5,
                     "context": 1000000,
                     "created": 1791397883
+                },
+                {
+                    "id": "claude-haiku-4-5",
+                    "name": "Anthropic: Claude Haiku 4.5",
+                    "score": 7.4,
+                    "context": 200000,
+                    "created": 1760547638
                 },
                 {
                     "id": "claude-opus-5",
@@ -81,12 +88,6 @@
                     "created": 1764010580
                 },
                 {
-                    "id": "claude-haiku-4-5",
-                    "name": "Anthropic: Claude Haiku 4.5",
-                    "context": 200000,
-                    "created": 1760547638
-                },
-                {
                     "id": "claude-sonnet-4-5",
                     "name": "Anthropic: Claude Sonnet 4.5",
                     "context": 1000000,
@@ -128,14 +129,14 @@
                 {
                     "id": "gpt-6-sol",
                     "name": "OpenAI: GPT-6 Sol",
-                    "score": 44.1,
+                    "score": 44.2,
                     "context": 1050000,
                     "created": 1790100775
                 },
                 {
                     "id": "gpt-5.6-terra",
                     "name": "OpenAI: GPT-5.6 Terra",
-                    "score": 32.2,
+                    "score": 32.3,
                     "context": 1050000,
                     "created": 1783590857
                 },
@@ -149,6 +150,7 @@
                 {
                     "id": "gpt-5.6-luna",
                     "name": "OpenAI: GPT-5.6 Luna",
+                    "score": 23.8,
                     "context": 1050000,
                     "created": 1783590864
                 },
@@ -418,6 +420,13 @@
                     "created": 1786549364
                 },
                 {
+                    "id": "deepseek-v4-pro",
+                    "name": "DeepSeek: DeepSeek V4 Pro 0423",
+                    "score": 12.6,
+                    "context": 1048576,
+                    "created": 1777000679
+                },
+                {
                     "id": "deepseek-v4.1-flash",
                     "name": "DeepSeek: DeepSeek V4.1 Flash",
                     "context": 1048576,
@@ -434,12 +443,6 @@
                     "name": "DeepSeek: DeepSeek V4 Flash 0731",
                     "context": 1048576,
                     "created": 1785478908
-                },
-                {
-                    "id": "deepseek-v4-pro",
-                    "name": "DeepSeek: DeepSeek V4 Pro 0423",
-                    "context": 1048576,
-                    "created": 1777000679
                 },
                 {
                     "id": "deepseek-v4-flash",
@@ -541,26 +544,6 @@
                     "rpd": 50,
                     "context": 1000000,
                     "created": 1792076662
-                },
-                {
-                    "id": "thinkingmachines/inkling-small:free",
-                    "name": "Thinking Machines: Inkling Small (free)",
-                    "score": 12.9,
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 1048576,
-                    "created": 1785443117
-                },
-                {
-                    "id": "thinkingmachines/inkling:free",
-                    "name": "Thinking Machines: Inkling (free)",
-                    "score": 12.5,
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 1048576,
-                    "created": 1784325956
                 },
                 {
                     "id": "nvidia/nemotron-3-ultra-550b-a55b:free",
