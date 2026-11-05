@@ -1,6 +1,6 @@
 {
  "v": 1,
- "checked": "2026-11-04T09:10:48Z",
+ "checked": "2026-11-05T09:29:00Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 46666,
+   "stars": 46893,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 5060,
+   "stars": 5395,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -42,13 +42,13 @@
    "repo": "TauricResearch/TradingAgents",
    "what": "多 AI 代理交易研究框架",
    "use": "每日檢查；冇公開回報，有扣成本後證據先加",
-   "sha": "c4544913a14ed3df5f1ed7b9e8483270ce20682a",
-   "date": "2026-10-27T08:38:40Z",
-   "message": "Merge pull request #1613 from TauricResearch/v0.7.1",
+   "sha": "9fa1196fffbcfd9de5146d2dd2869df84ab99838",
+   "date": "2026-11-04T10:13:55Z",
+   "message": "announce Trading-R1 official release",
    "release": "v0.7.1",
-   "stars": 120484,
+   "stars": 120717,
    "available": true,
-   "changedAt": "2026-11-03T00:13:14Z"
+   "changedAt": "2026-11-05T09:29:00Z"
   },
   {
    "repo": "xbtlin/ai-berkshire",
@@ -58,7 +58,7 @@
    "date": "2026-11-04T07:19:14Z",
    "message": "新增现代牙科投资研究及报告索引（2026-11-04）",
    "release": "v1.0.0",
-   "stars": 17008,
+   "stars": 17017,
    "available": true,
    "changedAt": "2026-11-04T09:10:48Z"
   },
@@ -70,7 +70,7 @@
    "date": "2026-11-02T17:47:39Z",
    "message": "chore(ci): align uv action and deduplicate bandit (#600) (#605)",
    "release": "",
-   "stars": 3594,
+   "stars": 3630,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   }
