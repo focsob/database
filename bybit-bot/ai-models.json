@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-05",
+    "updated": "2026-11-06",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -26,6 +26,13 @@
                     "created": 1788285838
                 },
                 {
+                    "id": "claude-opus-5",
+                    "name": "Anthropic: Claude Opus 5",
+                    "score": 44.2,
+                    "context": 1000000,
+                    "created": 1784912544
+                },
+                {
                     "id": "claude-haiku-5-5",
                     "name": "Anthropic: Claude Haiku 5.5",
                     "score": 36.5,
@@ -38,12 +45,6 @@
                     "score": 7.4,
                     "context": 200000,
                     "created": 1760547638
-                },
-                {
-                    "id": "claude-opus-5",
-                    "name": "Anthropic: Claude Opus 5",
-                    "context": 1000000,
-                    "created": 1784912544
                 },
                 {
                     "id": "claude-sonnet-5",
@@ -566,6 +567,16 @@
                     "created": 1786452751
                 },
                 {
+                    "id": "google/gemma-4-31b-it:free",
+                    "name": "Google: Gemma 4 31B (free)",
+                    "score": 4.4,
+                    "free": true,
+                    "rpm": 20,
+                    "rpd": 50,
+                    "context": 262144,
+                    "created": 1775148486
+                },
+                {
                     "id": "recursive/flint-v1.0:free",
                     "name": "Recursive: Flint (free)",
                     "free": true,
@@ -611,15 +622,6 @@
                     "created": 1781723748
                 },
                 {
-                    "id": "nvidia/nemotron-3.5-content-safety:free",
-                    "name": "NVIDIA: Nemotron 3.5 Content Safety (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 128000,
-                    "created": 1780581864
-                },
-                {
                     "id": "google/gemma-4-26b-a4b-it:free",
                     "name": "Google: Gemma 4 26B A4B  (free)",
                     "free": true,
@@ -627,15 +629,6 @@
                     "rpd": 50,
                     "context": 262144,
                     "created": 1775227989
-                },
-                {
-                    "id": "google/gemma-4-31b-it:free",
-                    "name": "Google: Gemma 4 31B (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 262144,
-                    "created": 1775148486
                 }
             ],
             "note": "OpenRouter 免費型號：每分鐘 20 次；每日共 50 次（買過 10 美元額度就 1,000 次），所有免費型號一齊計"
