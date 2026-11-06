@@ -1,18 +1,18 @@
 {
  "v": 1,
- "checked": "2026-11-05T09:29:00Z",
+ "checked": "2026-11-06T09:23:19Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
    "what": "鏈上 Aave 預言機延遲套利",
    "use": "唔做（用戶決定）：要放錢包私鑰、有槓桿做空以太幣、可被清算；只每日記錄更新",
-   "sha": "483907ffd413c0f4123e161b40079c32e0ead145",
-   "date": "2026-11-01T08:54:37Z",
-   "message": "docs: add demo video (simulated mainnet fork rehearsal)",
+   "sha": "0561f12533124efe4f3be9f7b490f8c3e70396ff",
+   "date": "2026-11-06T08:37:13Z",
+   "message": "docs: add Buy Me a Coffee support link",
    "release": "v0.1.0",
    "stars": 39,
    "available": true,
-   "changedAt": "2026-11-03T00:13:14Z"
+   "changedAt": "2026-11-06T09:23:19Z"
   },
   {
    "repo": "shiyu-coder/Kronos",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 46893,
+   "stars": 46983,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 5395,
+   "stars": 5646,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -46,7 +46,7 @@
    "date": "2026-11-04T10:13:55Z",
    "message": "announce Trading-R1 official release",
    "release": "v0.7.1",
-   "stars": 120717,
+   "stars": 120902,
    "available": true,
    "changedAt": "2026-11-05T09:29:00Z"
   },
@@ -58,7 +58,7 @@
    "date": "2026-11-04T07:19:14Z",
    "message": "新增现代牙科投资研究及报告索引（2026-11-04）",
    "release": "v1.0.0",
-   "stars": 17017,
+   "stars": 17032,
    "available": true,
    "changedAt": "2026-11-04T09:10:48Z"
   },
@@ -70,7 +70,7 @@
    "date": "2026-11-02T17:47:39Z",
    "message": "chore(ci): align uv action and deduplicate bandit (#600) (#605)",
    "release": "",
-   "stars": 3630,
+   "stars": 3662,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   }
