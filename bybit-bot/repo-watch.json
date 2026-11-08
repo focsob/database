@@ -1,6 +1,6 @@
 {
  "v": 1,
- "checked": "2026-11-07T08:46:28Z",
+ "checked": "2026-11-08T08:58:40Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 47120,
+   "stars": 47289,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 5834,
+   "stars": 6050,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -46,7 +46,7 @@
    "date": "2026-11-04T10:13:55Z",
    "message": "announce Trading-R1 official release",
    "release": "v0.7.1",
-   "stars": 121066,
+   "stars": 121247,
    "available": true,
    "changedAt": "2026-11-05T09:29:00Z"
   },
@@ -58,7 +58,7 @@
    "date": "2026-11-04T07:19:14Z",
    "message": "新增现代牙科投资研究及报告索引（2026-11-04）",
    "release": "v1.0.0",
-   "stars": 17045,
+   "stars": 17051,
    "available": true,
    "changedAt": "2026-11-04T09:10:48Z"
   },
@@ -66,13 +66,13 @@
    "repo": "tradermonty/claude-trading-skills",
    "what": "股票研究同交易技能集",
    "use": "長線組合同風險管理參考",
-   "sha": "6d98c9e315ba6bee5fe72be6b8a64bbb9989be5a",
-   "date": "2026-11-07T05:37:37Z",
-   "message": "feat(portfolio): ship the offline holdings review workflow (#647)",
+   "sha": "6d7bc466b51e90e625274c7e21a26bbb8b125c2f",
+   "date": "2026-11-08T03:17:59Z",
+   "message": "Merge pull request #674 from rezamuliawijaya/fix/earnings-calendar-4000-cap",
    "release": "",
-   "stars": 3672,
+   "stars": 3689,
    "available": true,
-   "changedAt": "2026-11-07T08:46:28Z"
+   "changedAt": "2026-11-08T08:58:40Z"
   }
  ]
 }
