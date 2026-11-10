@@ -1,6 +1,6 @@
 {
  "v": 1,
- "checked": "2026-11-09T09:46:36Z",
+ "checked": "2026-11-10T09:48:47Z",
  "repos": [
   {
    "repo": "akari-sora/aave-oracle-lag-arb",
@@ -22,7 +22,7 @@
    "date": "2026-04-13T12:38:49Z",
    "message": "Merge pull request #243 from ElhamDevelopmentStudio/fix/batch-dimension-training",
    "release": "",
-   "stars": 47376,
+   "stars": 47473,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -34,7 +34,7 @@
    "date": "2026-10-20T14:17:50Z",
    "message": "The Trader skill v2: 11 day-trading skills",
    "release": "",
-   "stars": 6263,
+   "stars": 6489,
    "available": true,
    "changedAt": "2026-11-03T00:13:14Z"
   },
@@ -46,7 +46,7 @@
    "date": "2026-11-04T10:13:55Z",
    "message": "announce Trading-R1 official release",
    "release": "v0.7.1",
-   "stars": 121459,
+   "stars": 121757,
    "available": true,
    "changedAt": "2026-11-05T09:29:00Z"
   },
@@ -58,7 +58,7 @@
    "date": "2026-11-04T07:19:14Z",
    "message": "新增现代牙科投资研究及报告索引（2026-11-04）",
    "release": "v1.0.0",
-   "stars": 17066,
+   "stars": 17076,
    "available": true,
    "changedAt": "2026-11-04T09:10:48Z"
   },
@@ -70,7 +70,7 @@
    "date": "2026-11-09T03:33:49Z",
    "message": "fix(docs): generate canonical README API guidance (#690)",
    "release": "",
-   "stars": 3705,
+   "stars": 3727,
    "available": true,
    "changedAt": "2026-11-09T09:46:36Z"
   }
