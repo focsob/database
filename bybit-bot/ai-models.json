@@ -1,9 +1,16 @@
 {
-    "updated": "2026-11-09",
+    "updated": "2026-11-10",
     "providers": [
         {
             "provider": "CLAUDE",
             "models": [
+                {
+                    "id": "claude-fable-5-2",
+                    "name": "Anthropic: Claude Fable 5.2",
+                    "score": 64.6,
+                    "context": 1000000,
+                    "created": 1794253781
+                },
                 {
                     "id": "claude-opus-5-5",
                     "name": "Anthropic: Claude Opus 5.5",
@@ -156,6 +163,13 @@
                     "created": 1783590864
                 },
                 {
+                    "id": "gpt-oss-120b",
+                    "name": "OpenAI: gpt-oss-120b",
+                    "score": 3.8,
+                    "context": 131072,
+                    "created": 1754414231
+                },
+                {
                     "id": "gpt-5.6-sol",
                     "name": "OpenAI: GPT-5.6 Sol",
                     "context": 1050000,
@@ -226,12 +240,6 @@
                     "name": "OpenAI: GPT-5 Nano",
                     "context": 400000,
                     "created": 1754587402
-                },
-                {
-                    "id": "gpt-oss-120b",
-                    "name": "OpenAI: gpt-oss-120b",
-                    "context": 131072,
-                    "created": 1754414231
                 },
                 {
                     "id": "gpt-oss-20b",
@@ -507,12 +515,13 @@
                     "rpm": 30,
                     "rpd": 1000,
                     "tpm": 8000,
-                    "context": 1024000,
+                    "context": 1048575,
                     "created": 1786722910
                 },
                 {
                     "id": "openai/gpt-oss-120b",
                     "name": "OpenAI: gpt-oss-120b",
+                    "score": 3.8,
                     "free": true,
                     "rpm": 30,
                     "rpd": 1000,
@@ -536,6 +545,16 @@
         {
             "provider": "OPENROUTER",
             "models": [
+                {
+                    "id": "thinkingmachines/inkling-2-small:free",
+                    "name": "Thinking Machines: Inkling 2 Small (free)",
+                    "score": 30.6,
+                    "free": true,
+                    "rpm": 20,
+                    "rpd": 50,
+                    "context": 1048576,
+                    "created": 1794261847
+                },
                 {
                     "id": "nvidia/nemotron-3.5-super-vl:free",
                     "name": "NVIDIA: Nemotron 3.5 Super VL (free)",
