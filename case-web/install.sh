@@ -293,7 +293,9 @@ Description=Check for updates every 5 minutes ($TEAM)
 
 [Timer]
 OnBootSec=2min
-OnUnitActiveSec=5min
+OnCalendar=*:0/5
+RandomizedDelaySec=30
+Persistent=true
 
 [Install]
 WantedBy=timers.target
