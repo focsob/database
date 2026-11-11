@@ -1,0 +1,172 @@
+{
+ "version": 1,
+ "runtime": "3.6.2",
+ "models": {
+  "det_500m": {
+   "size": 2525020,
+   "sha256": "dfcd9950310db6ad23316a4c5650b908783e3ee2a79aacef2914ff3f765c672b",
+   "parts": [
+    "mnn/det_500m.mnn.part00"
+   ],
+   "inputs": [
+    {
+     "name": "input.1",
+     "shape": [
+      1,
+      3,
+      -1,
+      -1
+     ]
+    }
+   ],
+   "outputs": [
+    "443",
+    "468",
+    "493",
+    "446",
+    "471",
+    "496",
+    "449",
+    "474",
+    "499"
+   ]
+  },
+  "det_10g": {
+   "size": 16925304,
+   "sha256": "30536a1916caf6a5a71e55f71dbd7ce74b06397d2227a55e47ab0fa09edc60dc",
+   "parts": [
+    "mnn/det_10g.mnn.part00"
+   ],
+   "inputs": [
+    {
+     "name": "input.1",
+     "shape": [
+      1,
+      3,
+      -1,
+      -1
+     ]
+    }
+   ],
+   "outputs": [
+    "448",
+    "471",
+    "494",
+    "451",
+    "474",
+    "497",
+    "454",
+    "477",
+    "500"
+   ]
+  },
+  "w600k_mbf": {
+   "size": 13637328,
+   "sha256": "13ee8a11b0cab6c96b60797e7e57dde490386aeeebc688a2df95d3aaec5d357c",
+   "parts": [
+    "mnn/w600k_mbf.mnn.part00"
+   ],
+   "inputs": [
+    {
+     "name": "input.1",
+     "shape": [
+      -1,
+      3,
+      112,
+      112
+     ]
+    }
+   ],
+   "outputs": [
+    "516"
+   ]
+  },
+  "w600k_r50": {
+   "size": 174346364,
+   "sha256": "3a5082115809728419a74f99d120c63b96cd0d1c7a1583c440638d2c978514f2",
+   "parts": [
+    "mnn/w600k_r50.mnn.part00",
+    "mnn/w600k_r50.mnn.part01"
+   ],
+   "inputs": [
+    {
+     "name": "input.1",
+     "shape": [
+      -1,
+      3,
+      112,
+      112
+     ]
+    }
+   ],
+   "outputs": [
+    "683"
+   ]
+  },
+  "kprpe_vitb_wf12m": {
+   "size": 460963720,
+   "sha256": "e8c9d9d57c185cf04fef34c20c6e7dd4db75b4d64c3c86d172668584693e115e",
+   "parts": [
+    "mnn/kprpe_vitb_wf12m.mnn.part00",
+    "mnn/kprpe_vitb_wf12m.mnn.part01",
+    "mnn/kprpe_vitb_wf12m.mnn.part02",
+    "mnn/kprpe_vitb_wf12m.mnn.part03",
+    "mnn/kprpe_vitb_wf12m.mnn.part04"
+   ],
+   "inputs": [
+    {
+     "name": "input",
+     "shape": [
+      1,
+      3,
+      112,
+      112
+     ]
+    },
+    {
+     "name": "keypoints",
+     "shape": [
+      1,
+      5,
+      2
+     ]
+    }
+   ],
+   "outputs": [
+    "embedding"
+   ]
+  }
+ },
+ "libs": [
+  {
+   "name": "libc++_shared.so",
+   "file": "mnn/lib/libc++_shared.so",
+   "size": 1794776,
+   "sha256": "f9992c4ba6b7c5a716e3a202fceb1ce029d6a2b0605838ac6b3219f489dd7970"
+  },
+  {
+   "name": "libMNN.so",
+   "file": "mnn/lib/libMNN.so",
+   "size": 2497216,
+   "sha256": "f915474f37c6e04046eae2206ac9de0c1c336f648564f983a640e21021e1bb00"
+  },
+  {
+   "name": "libMNN_CL.so",
+   "file": "mnn/lib/libMNN_CL.so",
+   "size": 2715536,
+   "sha256": "a6bb93f570dfe23407d63a5e12e22b56936dd1be1e7bee2e62c6746ae2d5b244"
+  },
+  {
+   "name": "libMNN_Vulkan.so",
+   "file": "mnn/lib/libMNN_Vulkan.so",
+   "size": 787888,
+   "sha256": "2ab210564acb8429c8a5cdc4cb054305809065219325694b61c5d82b6f481a49"
+  },
+  {
+   "name": "libmnncore.so",
+   "file": "mnn/lib/libmnncore.so",
+   "size": 22760,
+   "sha256": "b0aa1f4ee8a39414c3749b165ac16cffbc4ad714ab6fb3ecd8d313de9cbac332"
+  }
+ ]
+}
