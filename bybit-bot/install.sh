@@ -20,15 +20,19 @@ set -euo pipefail
 
 APP=bybitbot
 MANIFEST_URL="https://raw.githubusercontent.com/focsob/database/main/bybit-bot/app.json"
+# the private repository (needs a read-only GitHub token: env BYBITBOT_GH_TOKEN, or the one "bybitbot token" stored)
+PRIVATE_API="https://api.github.com/repos/focsob/bybit_bot"
 HOME_DIR=/opt/bybitbot
 DATA_DIR=/var/lib/bybitbot
 CONF_DIR=/etc/bybitbot
 CONF="$CONF_DIR/install.conf"
+# "Authorization: Bearer <token>" for curl -H @file (root only; the token never appears on a command line)
+AUTH_FILE="$CONF_DIR/github-auth.hdr"
 INTERNAL_PORT=18080
 DEFAULT_DOMAIN="s1233505.francecentral.cloudapp.azure.com"
 # revision of the system settings below (service isolation, HTTPS); the program asks for a re-run when
 # its own SelfUpdate.INSTALLER_REV is higher
-INSTALLER_REV=2
+INSTALLER_REV=3
 
 say()  { printf '\033[1;33m==>\033[0m %s\n' "$*"; }
 ok()   { printf '\033[1;32m ✓\033[0m %s\n' "$*"; }
@@ -60,7 +64,7 @@ done
 
 # ---------- uninstall ----------
 if [ "$UNINSTALL" -eq 1 ]; then
-  say "移除 Bybit Bot"
+  say "移除 Fatbo Trade Bot"
   systemctl disable --now "$APP-mt5" 2>/dev/null || true
   systemctl disable --now "$APP" 2>/dev/null || true
   rm -f /etc/systemd/system/$APP.service /etc/systemd/system/$APP-mt5.service /usr/local/bin/$APP
@@ -106,7 +110,7 @@ ask() { # ask VAR "question" default
 }
 
 echo
-echo "  Bybit Bot 伺服器安裝"
+echo "  Fatbo Trade Bot 伺服器安裝"
 echo "  ─────────────────────"
 ask DOMAIN "網域名稱" "$DOMAIN"
 ask PORT "網頁控制台 HTTPS 端口" "$PORT"
@@ -181,6 +185,30 @@ if [ -n "${BASH_SOURCE[0]:-}" ] && [ -f "${BASH_SOURCE[0]}" ]; then
 fi
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
+
+# A token given now is kept for later updates; with a token every download comes from the private repository.
+if [ -n "${BYBITBOT_GH_TOKEN:-}" ]; then
+  case "$BYBITBOT_GH_TOKEN" in
+    github_pat_*|ghp_*|gho_*|ghu_*|ghs_*|ghr_*) ;;
+    *) die "BYBITBOT_GH_TOKEN 唔似 GitHub 金鑰（應該係 github_pat_ 或者 ghp_ 開頭）" ;;
+  esac
+  mkdir -p "$CONF_DIR"
+  ( umask 077; printf 'Authorization: Bearer %s\n' "$BYBITBOT_GH_TOKEN" > "$AUTH_FILE" )
+  chown root:root "$AUTH_FILE"; chmod 0600 "$AUTH_FILE"
+fi
+PRIVATE=0
+[ -s "$AUTH_FILE" ] && PRIVATE=1
+
+# fetch URL OUT [MAX_SECONDS]: addresses of the private repository get the token
+fetch() {
+  local url="$1" out="$2" max="${3:-60}" accept="application/vnd.github.raw+json"
+  case "$url" in
+    "$PRIVATE_API"/*)
+      case "$url" in */releases/assets/*) accept="application/octet-stream" ;; esac
+      curl -fsSL --retry 3 --max-time "$max" -H @"$AUTH_FILE" -H "Accept: $accept" -H "X-GitHub-Api-Version: 2022-11-28" -o "$out" "$url" ;;
+    *) curl -fsSL --retry 3 --max-time "$max" -o "$out" "$url" ;;
+  esac
+}
 if [ -d "$SRC_DIR/lib" ] && [ -f "$SRC_DIR/VERSION" ]; then
   VERSION="$(tr -d '\r\n' < "$SRC_DIR/VERSION")"
   say "用本機檔案安裝版本 $VERSION"
@@ -193,13 +221,17 @@ elif [ -n "${BYBITBOT_PACKAGE:-}" ]; then
   tar -xzf "$BYBITBOT_PACKAGE" -C "$TMP/pkg"
 else
   say "下載最新版本"
-  curl -fsSL --retry 3 --max-time 60 "$MANIFEST_URL?t=$(date +%s)" -o "$TMP/app.json" || die "下載版本資料失敗：$MANIFEST_URL"
+  if [ "$PRIVATE" = 1 ]; then
+    fetch "$PRIVATE_API/contents/app.json?ref=dist" "$TMP/app.json" || die "由私人 repo 下載版本資料失敗：請檢查 GitHub 金鑰（sudo $APP token）有冇過期、有冇 focsob/bybit_bot 嘅 Contents 讀取權限"
+  else
+    fetch "$MANIFEST_URL?t=$(date +%s)" "$TMP/app.json" || die "下載版本資料失敗：$MANIFEST_URL（如果公開位置已經停用，請先執行 sudo $APP token 貼上 GitHub 金鑰）"
+  fi
   read -r URL SHA VERSION < <(python3 -c '
 import json, sys
 m = json.load(open(sys.argv[1]))
 f = m["files"]["server"]
 print(f["url"], f["sha256"], m["versionName"])' "$TMP/app.json") || die "版本資料格式唔啱"
-  curl -fL --retry 3 --max-time 900 -o "$TMP/server.tar.gz" "$URL" || die "下載程式失敗：$URL"
+  fetch "$URL" "$TMP/server.tar.gz" 900 || die "下載程式失敗：$URL"
   echo "$SHA  $TMP/server.tar.gz" | sha256sum -c --quiet - || die "下載檔案校驗失敗（SHA-256 唔夾），已停止安裝"
   mkdir -p "$TMP/pkg"
   tar -xzf "$TMP/server.tar.gz" -C "$TMP/pkg"
@@ -224,7 +256,7 @@ MEM_MB=$(awk '/MemTotal/ {print int($2/1024)}' /proc/meminfo)
 HEAP=$(( MEM_MB / 2 )); [ "$HEAP" -gt 1536 ] && HEAP=1536; [ "$HEAP" -lt 256 ] && HEAP=256
 cat > /etc/systemd/system/$APP.service <<EOF
 [Unit]
-Description=Bybit Bot server
+Description=Fatbo Trade Bot server
 After=network-online.target
 Wants=network-online.target
 
@@ -275,22 +307,37 @@ chmod 0600 "$DATA_DIR/installer.rev"
 # helper command
 cat > /usr/local/bin/$APP <<EOF
 #!/usr/bin/env bash
-# Bybit Bot helper: status | logs | restart | stop | start | reset-password | update | uninstall | mt5-setup | mt5-logs | mt5-restart
+# Fatbo Trade Bot helper: status | logs | restart | stop | start | reset-password | update | token | uninstall | mt5-setup | mt5-logs | mt5-restart
 set -e
+# the newest installer: from the private repository when a GitHub token is stored, else the public folder
+installer() {
+  if sudo test -s $AUTH_FILE; then
+    sudo curl -fsSL -H @$AUTH_FILE -H "Accept: application/vnd.github.raw+json" -H "X-GitHub-Api-Version: 2022-11-28" "$PRIVATE_API/contents/install.sh?ref=dist"
+  else
+    curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh
+  fi
+}
 case "\${1:-status}" in
   status) systemctl status $APP --no-pager; systemctl status $APP-mt5 --no-pager 2>/dev/null || true ;;
   logs) journalctl -u $APP -f ;;
   restart|stop|start) sudo systemctl "\$1" $APP ;;
-  mt5-setup) curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh | sudo bash -s -- --yes --mt5 ;;
+  mt5-setup) f=\$(mktemp); installer > "\$f" || { rm -f "\$f"; echo "下載安裝程式失敗（GitHub 金鑰過期？sudo $APP token）"; exit 1; }; sudo bash "\$f" --yes --mt5; rm -f "\$f" ;;
   mt5-logs) journalctl -u $APP-mt5 -f ;;
   mt5-restart) sudo systemctl restart $APP-mt5 ;;
   reset-password)
     sudo systemctl stop $APP
     sudo -u $APP env BYBITBOT_DATA=$DATA_DIR /usr/bin/java -cp "$HOME_DIR/current/lib/*" bot.server.MainKt reset-password
     sudo systemctl start $APP ;;
-  update) curl -fsSL https://raw.githubusercontent.com/focsob/database/main/bybit-bot/install.sh | sudo bash -s -- --yes ;;
+  update) f=\$(mktemp); installer > "\$f" || { rm -f "\$f"; echo "下載安裝程式失敗（GitHub 金鑰過期？sudo $APP token）"; exit 1; }; sudo bash "\$f" --yes; rm -f "\$f" ;;
+  token)
+    # the read-only GitHub token for "update" and "mt5-setup" (the panel keeps its own copy for automatic updates)
+    read -r -s -p "貼上 GitHub 金鑰（github_pat_… 或者 ghp_…；留空 = 移除）：" t; echo
+    if [ -z "\$t" ]; then sudo rm -f $AUTH_FILE; echo "已移除"; exit 0; fi
+    case "\$t" in github_pat_*|ghp_*|gho_*|ghu_*|ghs_*|ghr_*) ;; *) echo "呢個唔似 GitHub 金鑰"; exit 1 ;; esac
+    printf 'Authorization: Bearer %s\\n' "\$t" | sudo sh -c 'umask 077; cat > $AUTH_FILE; chown root:root $AUTH_FILE; chmod 0600 $AUTH_FILE'
+    if installer > /dev/null; then echo "已儲存，測試下載成功"; else echo "已儲存，但測試下載失敗：請檢查金鑰嘅權限（focsob/bybit_bot → Contents → Read-only）"; exit 1; fi ;;
   uninstall) sudo bash $HOME_DIR/install.sh --uninstall ;;
-  *) echo "用法：$APP status|logs|restart|stop|start|reset-password|update|uninstall|mt5-setup|mt5-logs|mt5-restart" ;;
+  *) echo "用法：$APP status|logs|restart|stop|start|reset-password|update|token|uninstall|mt5-setup|mt5-logs|mt5-restart" ;;
 esac
 EOF
 chmod 0755 /usr/local/bin/$APP
@@ -485,7 +532,7 @@ PY
 mt5_unit() {
   cat > /etc/systemd/system/$APP-mt5.service <<UNIT
 [Unit]
-Description=Bybit Bot MetaTrader 5 terminal (Wine, virtual screen)
+Description=Fatbo Trade Bot MetaTrader 5 terminal (Wine, virtual screen)
 After=network-online.target $APP.service
 Wants=network-online.target
 StartLimitIntervalSec=0
