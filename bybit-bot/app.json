@@ -5,8 +5,8 @@
   "files": {
     "server": {
       "url": "https://raw.githubusercontent.com/focsob/database/main/bybit-bot/bybitbot-server-3.4.0.tar.gz",
-      "sha256": "ade5e97b9164db8e063c542403e67311cdb00bac22483afdea4c8c44143cc1bb",
-      "size": 13023751,
+      "sha256": "f3fc2b61de855caa5c1d5092e0d409fb66b22176a8f98a158353532a3e2c1aa1",
+      "size": 13023447,
       "name": "bybitbot-server-3.4.0.tar.gz"
     }
   }
