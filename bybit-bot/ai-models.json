@@ -1,5 +1,5 @@
 {
-    "updated": "2026-11-10",
+    "updated": "2026-11-11",
     "providers": [
         {
             "provider": "CLAUDE",
@@ -606,6 +606,15 @@
                     "created": 1781723748
                 },
                 {
+                    "id": "baidu/ernie-5.5-flash-preview:free",
+                    "name": "Baidu: ERNIE-5.5-Flash-Preview (free)",
+                    "free": true,
+                    "rpm": 20,
+                    "rpd": 50,
+                    "context": 1024000,
+                    "created": 1794333533
+                },
+                {
                     "id": "liquid/lfm-3-1.7b:free",
                     "name": "LiquidAI: LFM3-1.7B (free)",
                     "free": true,
@@ -622,15 +631,6 @@
                     "rpd": 50,
                     "context": 262144,
                     "created": 1792622765
-                },
-                {
-                    "id": "xingchen-agi/xing4.0-29b-a4b:free",
-                    "name": "XingChen: Xing4.0 29B A4B (free)",
-                    "free": true,
-                    "rpm": 20,
-                    "rpd": 50,
-                    "context": 262144,
-                    "created": 1792177496
                 },
                 {
                     "id": "dots-studio/dots-3-note-preview:free",
